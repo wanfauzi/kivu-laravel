@@ -1,58 +1,257 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/images/kivu-logo.png" alt="KIVU" width="220">
 </p>
 
-## About Laravel
+<h1 align="center">KIVU</h1>
+<p align="center"><strong>Marketplace Micro-Freelance Mahasiswa × UMKM</strong></p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  <img alt="Laravel" src="https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white">
+  <img alt="Livewire" src="https://img.shields.io/badge/Livewire-4-4E56A6?logo=livewire&logoColor=white">
+  <img alt="PHP" src="https://img.shields.io/badge/PHP-8.3%2B-777BB4?logo=php&logoColor=white">
+  <img alt="Tailwind" src="https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white">
+  <img alt="MySQL" src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-green">
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<p align="center">
+  <a href="prd.md">📄 PRD</a> ·
+  <a href="security.md">🔒 Keamanan</a> ·
+  <a href="https://github.com/wanfauzi/kivu-laravel">🌐 Repo</a>
+</p>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Tentang
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**KIVU** menghubungkan **Mahasiswa/Talent** dengan **UMKM** untuk mengerjakan proyek micro-freelance berbayar. Alur intinya berjalan end-to-end dan datanya nyata (bukan halaman statis):
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> Posting → Lamar → Terima → Kirim → Setujui → Bayar → Selesai
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Di atas alur inti tersedia lapisan **kepercayaan** (verifikasi KTM, reputasi/ulasan, portofolio, profil publik) dan **tata kelola** (sengketa, moderasi, penarikan saldo).
 
-## Agentic Development
+## Fitur
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Mahasiswa / Talent
+- Melihat **peluang** (cari, filter budget, sort, pagination) & **detail proyek**.
+- **Melamar** proyek, **membatalkan** lamaran (PENDING), **melamar ulang**.
+- **Kirim hasil** setelah diterima, lalu **kirim ulang** bila diminta **revisi**.
+- **Dompet**: saldo, pendapatan, riwayat transaksi, **tarik saldo** (batalkan bila PENDING).
+- **Verifikasi KTM** (unggah; email `.ac.id` otomatis terverifikasi) + lencana **Mahasiswa Terverifikasi**.
+- **Profil**: bio, keahlian (skill), **portofolio** (file/URL), rating & ulasan diterima.
+- **Ajukan sengketa** dan membatalkannya.
 
-```bash
-composer require laravel/boost --dev
+### UMKM
+- **Buat**, **edit**, dan **batalkan** proyek.
+- **Kelola pelamar**: lihat reputasi, **terima**, atau **tolak** (dengan catatan alasan).
+- **Tinjau hasil**, **Setujui & Bayar**, atau **Minta Revisi**.
+- **Beri ulasan** setelah proyek selesai.
+- Lihat **profil publik** pelamar, **ajukan sengketa**, kelola **profil**.
 
-php artisan boost:install
+### Admin
+- **Dashboard** metrik (pembayaran bersih, penarikan, KTM, sengketa).
+- **Kelola pengguna**: **verifikasi/batalkan KTM**, **suspend/aktifkan**.
+- **Moderasi proyek** (takedown), **Transaksi**, **Penarikan** (setujui/tolak).
+- **Sengketa**: **Refund**, **Release**, atau **Tolak**.
+
+## Tech Stack
+
+| Layer | Teknologi |
+|---|---|
+| Framework | Laravel 13 |
+| Bahasa | PHP 8.3+ |
+| UI Dinamis | Livewire 4 + Blade |
+| CSS | Tailwind CSS v4 |
+| Build | Vite 8 |
+| Database | MySQL 8 |
+| ORM | Eloquent |
+| Auth / Otorisasi | Laravel Auth + Middleware + Gate/Policy |
+
+## Alur (Golden Path)
+
+```mermaid
+flowchart TD
+    A([Mulai]) --> B[UMKM membuat Project]
+    B --> C[Project OPEN]
+    C --> D[Mahasiswa melihat Project]
+    D --> E[Mahasiswa Apply]
+    E --> F{Application diterima?}
+    F -- Tidak --> G[REJECTED / WITHDRAWN]
+    F -- Ya --> H[ACCEPTED]
+    H --> I[Project IN_PROGRESS]
+    I --> J[Mahasiswa mengerjakan]
+    J --> K[Submit Work]
+    K --> L[SUBMITTED]
+    L --> M{Disetujui?}
+    M -- Tidak --> N[Minta Revisi]
+    N --> K
+    M -- Ya --> O[APPROVED]
+    O --> P[Transaction]
+    P --> Q[Wallet mahasiswa bertambah]
+    Q --> R[Project COMPLETED]
+    R --> S[Review]
+    S --> Z([Selesai])
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Persyaratan
 
-## Contributing
+- PHP **8.3+** (disarankan 8.4/8.5) dengan ekstensi standar Laravel
+- Composer 2
+- Node.js 18+ & NPM
+- MySQL **8**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Instalasi
 
-## Code of Conduct
+```bash
+# 1. Clone
+git clone https://github.com/wanfauzi/kivu-laravel.git
+cd kivu-laravel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 2. Dependency PHP
+composer install
 
-## Security Vulnerabilities
+# 3. Konfigurasi environment
+cp .env.example .env
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Atur koneksi database di `.env` (buat database `kivu` terlebih dahulu):
 
-## License
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=kivu
+DB_USERNAME=root
+DB_PASSWORD=
+# Hapus/komentari DB_SOCKET bila memakai koneksi TCP
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+# 4. Migrasi + data demo
+php artisan migrate --seed
+
+# 5. Storage link (untuk file publik/portofolio)
+php artisan storage:link
+
+# 6. Frontend
+npm install
+npm run build
+
+# 7. Jalankan
+php artisan serve
+# Buka http://127.0.0.1:8000
+```
+
+## Akun Demo
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@kivu.id` | `password` |
+| UMKM | `umkm@kivu.id` | `password` |
+| Mahasiswa | `talent@kivu.id` | `password` |
+
+> ⚠️ Kredensial ini **hanya untuk demo**. Ganti sebelum produksi (lihat [`security.md`](security.md)).
+
+## Menjalankan
+
+**Pengembangan** (hot reload + server):
+
+```bash
+php artisan serve
+npm run dev
+```
+
+**Produksi** (optimasi cache):
+
+```bash
+npm run build
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+> Catatan: karena `config:cache` aktif, setiap perubahan `.env` perlu `php artisan config:clear`.
+
+## Backup Database
+
+Backup database memakai perintah artisan:
+
+```bash
+php artisan db:backup                 # backup database (terkompresi)
+php artisan db:backup --keep=14       # simpan 14 hari terakhir
+php artisan db:backup --with-files    # ikut file upload (KTM/portofolio) + .env
+```
+
+Hasil tersimpan di `storage/backups/` (tidak ikut ke Git).
+
+**Restore:**
+
+```bash
+gunzip -c storage/backups/kivu-YYYY-mm-dd_HH-MM-SS.sql.gz | mysql -u root -p kivu
+```
+
+## Keamanan
+
+KIVU menerapkan: password hashing, sesi aman, proteksi brute-force (rate limit), otorisasi berlapis (middleware + Policy/Gate), validasi input & escaping (anti-XSS), CSRF, ORM (anti-SQLi), upload aman, penyimpanan KTM privat, serta operasi keuangan yang **atomik** (anti dobel-bayar/tarik).
+
+Detail lengkap, risiko, dan rekomendasi ada di **[`security.md`](security.md)**.
+
+## Struktur Folder (ringkas)
+
+```text
+app/
+├── Console/Commands/    # db:backup
+├── Http/Controllers/    # AuthController, KtmController
+├── Http/Middleware/     # RoleMiddleware
+├── Livewire/
+│   ├── Public/          # Landing, TalentProfile
+│   ├── Student/         # Dashboard, Opportunities, ProjectDetail, MyApplications, SubmitWork, Wallet, Profile
+│   ├── Umkm/            # Dashboard, Create/EditProject, MyProjects, ManageApplicants, ReviewSubmission, Profile
+│   └── Admin/           # Dashboard, Users, Projects, Transactions, Withdrawals, Disputes
+├── Models/
+├── Policies/
+└── Services/            # StudentTrust
+resources/views/         # Blade + komponen <x-ui.*>, <x-icon>
+routes/web.php
+prd.md · security.md
+```
+
+## QA / Verifikasi
+
+```bash
+php -l app/…              # cek sintaks
+npm run build             # build aset
+composer audit            # audit paket PHP
+npm audit                 # audit paket JS
+php artisan route:list    # tinjau rute & middleware
+```
+
+**Checklist demo:** jalankan golden path (UMKM buat proyek → mahasiswa lamar → UMKM terima → kirim hasil → setujui & bayar → dompet bertambah) dan pastikan akses lintas-peran ditolak (403).
+
+## Kontribusi & Konvensi Commit
+
+- Branch: `main` (stabil), fitur di `feat/nama-fitur`, perbaikan di `fix/nama-bug`.
+- Commit (Conventional Commits):
+
+```text
+feat: tambah fitur X
+fix: perbaiki bug Y
+docs: perbarui README
+refactor: rapikan Z
+chore: konfigurasi/alat
+```
+
+- Jangan commit `.env` atau kredensial. Lihat `.gitignore`.
+
+## Screenshots
+
+> _Placeholder — tambahkan tangkapan layar di `docs/screenshots/` lalu tautkan di sini._
+
+## Lisensi
+
+Dirilis di bawah lisensi **MIT**. Lihat file [`LICENSE`](LICENSE).
+
+## Kredit
+
+Dibangun dengan [Laravel](https://laravel.com), [Livewire](https://livewire.laravel.com), dan [Tailwind CSS](https://tailwindcss.com).

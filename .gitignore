@@ -12,6 +12,9 @@
 /.phpunit.cache
 /.vscode
 /.zed
+/.sql
+/.sql.gz
+/storage/app/laravel-brain
 /auth.json
 /node_modules
 /public/build
