@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Livewire\Public;
+
+use App\Models\Review;
+use App\Models\User;
+use App\Services\StudentTrust;
+use Livewire\Component;
+
+class TalentProfile extends Component
+{
+    public User $student;
+
+    public function mount(User $user)
+    {
+        if ($user->role !== 'student') {
+            abort(404);
+        }
+        $this->student = $user;
+    }
+
+    public function render()
+    {
+        $portfolios = $this->student->portfolios()->get();
+        $reviews = Review::with('reviewer')
+            ->where('reviewee_id', $this->student->id)
+            ->latest()
+            ->get();
+
+        return view('livewire.public.talent-profile', [
+            'student' => $this->student,
+            'portfolios' => $portfolios,
+            'reviews' => $reviews,
+            'trust' => StudentTrust::summary($this->student),
+        ])->layout('layouts.public');
+    }
+}
