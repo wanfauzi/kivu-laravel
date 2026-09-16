@@ -10,7 +10,14 @@ class Application extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['project_id', 'student_id', 'status', 'message', 'rejection_note'];
+    protected $fillable = ['project_id', 'student_id', 'status', 'message', 'bid_amount', 'file_path', 'rejection_note'];
+
+    protected function casts(): array
+    {
+        return [
+            'bid_amount' => 'integer',
+        ];
+    }
 
     public function project(): BelongsTo
     {

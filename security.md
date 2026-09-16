@@ -88,6 +88,7 @@ Akses lintas peran diuji dan menghasilkan **403 (ditolak)**.
 | Anti-SQLi | ORM Eloquent berparameter. | ✅ |
 | Skema URL aman | Validator `url` menolak `javascript:`/`data:` (diuji). | ✅ |
 | Upload dibatasi | KTM & portofolio: `jpg/jpeg/png/pdf` + batas ukuran. | ✅ |
+| Berkas hasil kerja privat | Disimpan di disk privat; diunduh lewat rute ber-otorisasi (`SubmissionFileController` + `SubmissionPolicy::view`). | ✅ |
 | KTM disimpan privat | Bukan di folder publik; akses lewat rute ber-otorisasi. | ✅ |
 
 ### 4.4 Integritas Keuangan
@@ -207,6 +208,8 @@ Prinsip: **kumpulkan seperlunya**, simpan data sensitif secara privat, tampilkan
 | Registrasi middleware/alias | `bootstrap/app.php` |
 | Autentikasi | `app/Http/Controllers/AuthController.php` |
 | Akses KTM | `app/Http/Controllers/KtmController.php` |
+| Berkas hasil kerja privat | `app/Http/Controllers/SubmissionFileController.php` + `SubmissionPolicy::view` |
+| Pemilihan pemenang | `app/Livewire/Umkm/SelectWinner.php` + `ReviewSubmission.php` |
 | Policies | `app/Policies/*.php` |
 | Komponen konfirmasi | `resources/views/components/ui/confirm-modal.blade.php` |
 | Badge status/kepercayaan | `resources/views/components/ui/status-badge.blade.php`, `verified-badge.blade.php` |

@@ -12,11 +12,23 @@ use Livewire\Component;
 class MyProjects extends Component
 {
     public ?int $disputeProjectId = null;
+
     public string $reason = '';
+
     public string $description = '';
+
     public bool $confirmingDispute = false;
+
     public ?int $pendingCancelDisputeId = null;
+
     public bool $confirmingCancelDispute = false;
+
+    public string $statusFilter = '';
+
+    public function setStatus(string $status): void
+    {
+        $this->statusFilter = $this->statusFilter === $status ? '' : $status;
+    }
 
     public function openDispute(int $projectId)
     {
@@ -38,7 +50,7 @@ class MyProjects extends Component
     public function submitDispute()
     {
         $this->validate([
-            'reason' => 'required|in:' . implode(',', array_keys(Dispute::REASONS)),
+            'reason' => 'required|in:'.implode(',', array_keys(Dispute::REASONS)),
             'description' => 'required|string|min:10|max:2000',
         ]);
 
@@ -71,6 +83,7 @@ class MyProjects extends Component
         } catch (\RuntimeException $e) {
             $this->cancelDispute();
             session()->flash('error', $e->getMessage());
+
             return;
         }
 
@@ -103,11 +116,43 @@ class MyProjects extends Component
 
     public function render()
     {
-        $projects = Project::where('owner_id', Auth::id())
+        $counts = Project::where('owner_id', Auth::id())
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $statuses = ['DRAFT', 'OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED', 'CANCELLED'];
+        $labels = [
+            'DRAFT' => 'Belum Dibayar',
+            'OPEN' => 'Terbuka',
+            'IN_PROGRESS' => 'Dikerjakan',
+            'SUBMITTED' => 'Menunggu Review',
+            'COMPLETED' => 'Selesai',
+            'CANCELLED' => 'Dibatalkan',
+        ];
+
+        $tabs = [[
+            'label' => 'Semua',
+            'value' => '',
+            'badge' => $counts->sum(),
+        ]];
+
+        foreach ($statuses as $status) {
+            $tabs[] = [
+                'label' => $labels[$status],
+                'value' => $status,
+                'badge' => $counts[$status] ?? 0,
+            ];
+        }
+
+        $projects = Project::with(['category', 'skills'])
+            ->where('owner_id', Auth::id())
+            ->when($this->statusFilter !== '', fn ($q) => $q->where('status', $this->statusFilter))
             ->withCount('applications')
+            ->withCount('submissions')
+            ->with('applications')
             ->latest()
-            ->get()
-            ->groupBy('status');
+            ->get();
 
         $disputes = Dispute::with('against')
             ->whereIn('project_id', Project::where('owner_id', Auth::id())->pluck('id'))
@@ -122,6 +167,7 @@ class MyProjects extends Component
         return view('livewire.umkm.my-projects', [
             'projects' => $projects,
             'disputes' => $disputes,
+            'tabs' => $tabs,
         ])->layout('components.layouts.dashboard');
     }
 }

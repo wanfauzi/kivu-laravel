@@ -1,0 +1,25 @@
+{
+  "projectId": "584a28a4-c38f-4759-a1a9-0d6a15ec13d4",
+  "name": "KIVU Golden Path Test",
+  "description": "Verifies login, opportunities browsing, project application, and student wallet view.",
+  "priority": "p1",
+  "type": "frontend",
+  "planSteps": [
+    {
+      "type": "action",
+      "description": "Navigate to http://127.0.0.1:8001/login and log in using talent@kivu.id / password"
+    },
+    {
+      "type": "action",
+      "description": "Navigate to http://127.0.0.1:8001/student/opportunities and click view on the first project"
+    },
+    {
+      "type": "action",
+      "description": "Navigate to http://127.0.0.1:8001/student/wallet and assert balance displays correctly"
+    },
+    {
+      "type": "assertion",
+      "description": "Assert that dashboard or student wallet loads without 500 error"
+    }
+  ]
+}

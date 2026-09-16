@@ -1,343 +1,351 @@
-<div class="bg-white">
-    {{-- ============ TOP BAR ============ --}}
-    <header class="sticky top-0 z-40 border-b border-gray-100 bg-white/80 backdrop-blur-md">
-        <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-            <a href="/" class="flex shrink-0 items-center">
-                <img src="{{ asset('images/kivu-logo.png') }}" alt="KIVU" class="h-8 w-auto">
-            </a>
-            <nav class="hidden items-center gap-7 text-sm font-medium text-gray-600 md:flex">
-                <a href="#peluang" class="transition hover:text-blue-600">Peluang</a>
-                <a href="#talent" class="transition hover:text-blue-600">Talent</a>
-                <a href="#fitur" class="transition hover:text-blue-600">Fitur</a>
-                <a href="#cara-kerja" class="transition hover:text-blue-600">Cara Kerja</a>
-            </nav>
-            <div class="flex items-center gap-2 sm:gap-3">
-                <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-gray-700 transition hover:text-blue-600">Masuk</a>
-                <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 transition hover:bg-blue-700">Daftar</a>
-            </div>
+<div>
+<nav class="fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-kivu-border" id="kivu-navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <a href="/" class="flex-shrink-0 flex items-center gap-2">
+        <img src="{{ asset('images/kivu-logo.png') }}" alt="KIVU" class="h-8 w-auto">
+      </a>
+      <div class="hidden md:flex space-x-8 items-center">
+        <a href="#tentang" class="text-gray-600 hover:text-kivu-primary font-medium text-sm transition-colors">Tentang</a>
+        <a href="#kategori" class="text-gray-600 hover:text-kivu-primary font-medium text-sm transition-colors">Kategori</a>
+        <a href="#cara-kerja" class="text-gray-600 hover:text-kivu-primary font-medium text-sm transition-colors">Cara Kerja</a>
+        <a href="#testimoni" class="text-gray-600 hover:text-kivu-primary font-medium text-sm transition-colors">Testimoni</a>
+      </div>
+      <div class="hidden md:flex items-center space-x-4">
+        @auth
+          <a href="{{ url('/dashboard') }}" wire:navigate class="text-kivu-primary border border-kivu-primary hover:bg-kivu-primary-soft font-semibold rounded-full px-6 py-2.5 text-sm transition-colors">Dashboard</a>
+          <a href="{{ route('register') }}" class="bg-kivu-yellow hover:bg-kivu-yellow-hover text-kivu-yellow-text font-bold rounded-full px-6 py-2.5 text-sm shadow-lg shadow-kivu-yellow/20">Daftar</a>
+        @else
+          <a href="{{ route('login') }}" class="text-kivu-primary border border-kivu-primary hover:bg-kivu-primary-soft font-semibold rounded-full px-6 py-2.5 text-sm transition-colors">Masuk</a>
+          <a href="{{ route('register') }}" class="bg-kivu-yellow hover:bg-kivu-yellow-hover text-kivu-yellow-text font-bold rounded-full px-6 py-2.5 text-sm shadow-lg shadow-kivu-yellow/20 transition-colors">Daftar</a>
+        @endauth
+      </div>
+      <div class="md:hidden flex items-center">
+        <button id="kivu-hamburger" type="button" class="text-gray-600 hover:text-gray-900 p-2" aria-label="Menu">
+          <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="kivu-mobile-menu" class="hidden md:hidden border-t border-kivu-border bg-white">
+    <div class="px-4 py-4 space-y-1">
+      <a href="#tentang" class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-kivu-surface-muted">Tentang</a>
+      <a href="#kategori" class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-kivu-surface-muted">Kategori</a>
+      <a href="#cara-kerja" class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-kivu-surface-muted">Cara Kerja</a>
+      <a href="#testimoni" class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-kivu-surface-muted">Testimoni</a>
+      <div class="pt-3 flex flex-col gap-2">
+        @auth
+          <a href="{{ url('/dashboard') }}" class="w-full text-center bg-kivu-primary text-white font-semibold rounded-full px-6 py-3 text-sm">Dashboard</a>
+        @else
+          <a href="{{ route('login') }}" class="w-full text-center border border-kivu-primary text-kivu-primary font-semibold rounded-full px-6 py-3 text-sm">Masuk</a>
+          <a href="{{ route('register') }}" class="w-full text-center bg-kivu-yellow text-kivu-yellow-text font-bold rounded-full px-6 py-3 text-sm">Daftar</a>
+        @endauth
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
+  <div class="hero-blob hidden lg:block"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-kivu-primary-soft border border-kivu-primary/20 text-kivu-primary text-xs font-semibold mb-6">
+          <span class="w-2 h-2 rounded-full bg-kivu-primary"></span> Platform Talenta Mahasiswa untuk UMKM
         </div>
-    </header>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+          Talenta Muda <br /> untuk UMKM <br /> yang <span class="text-kivu-primary relative inline-block">Lebih Maju
+            <svg class="absolute w-full h-3 -bottom-1 left-0 text-kivu-yellow opacity-70" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 0" stroke="currentColor" stroke-width="4" fill="none"/></svg>
+          </span>
+        </h1>
+        <p class="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
+          KIVU menghubungkan mahasiswa berbakat dengan UMKM di seluruh Indonesia untuk mengerjakan berbagai tugas secara fleksibel, terjangkau, dan berkualitas. Bangun portofolio, bantu UMKM tumbuh.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 mb-10">
+          <a href="{{ route('register') }}" class="bg-kivu-yellow hover:bg-kivu-yellow-hover text-kivu-yellow-text font-bold rounded-full px-8 py-3.5 text-base shadow-lg shadow-kivu-yellow/20 flex items-center justify-center gap-2 group">
+            Mulai Sekarang <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+          </a>
+        </div>
+        <div class="flex flex-wrap items-center gap-6 text-sm text-gray-500 font-medium">
+          <div class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-kivu-primary"></i> Talenta Terverifikasi</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-lock text-kivu-primary"></i> Proses Aman &amp; Transparan</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-headset text-kivu-primary"></i> Dukungan Penuh</div>
+        </div>
+      </div>
+      <div class="relative mt-10 lg:mt-0">
+        <div class="absolute -inset-4 bg-gradient-to-br from-kivu-primary/25 via-transparent to-kivu-yellow/20 blur-2xl rounded-[3rem] -z-10"></div>
+        <div class="relative w-full aspect-[4/3] max-w-[600px] mx-auto animate-float">
+          <div class="absolute inset-0 rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-white/50">
+            <img src="{{ asset('images/orang1.png') }}" alt="Mahasiswa Berbakat" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-kivu-primary/20 via-transparent to-transparent"></div>
+            <div class="absolute top-4 right-4 glass-panel rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-md">
+              <i class="fa-solid fa-circle-check text-kivu-primary"></i>
+              <span class="text-xs font-bold text-gray-900">Talenta Terverifikasi</span>
+            </div>
+            <div class="absolute bottom-4 left-4 glass-panel rounded-xl px-3 py-2 flex items-center gap-2 shadow-md">
+              <span class="w-8 h-8 bg-kivu-primary text-white rounded-lg flex items-center justify-center"><i class="fa-solid fa-bolt"></i></span>
+              <div>
+                <p class="text-xs font-extrabold text-gray-900 leading-tight">Siap bantu bisnis kamu</p>
+                <p class="text-[10px] text-gray-500">cepat &amp; berkualitas</p>
+              </div>
+            </div>
+          </div>
 
-    {{-- ============ HERO ============ --}}
-    <section class="relative overflow-hidden">
-        {{-- background blobs --}}
-        <div class="pointer-events-none absolute inset-0 -z-10">
-            <div class="absolute -top-24 -right-24 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-blue-300/40 to-sky-200/30 blur-3xl"></div>
-            <div class="absolute top-40 -left-32 h-[380px] w-[380px] rounded-full bg-gradient-to-br from-indigo-200/40 to-blue-100/20 blur-3xl"></div>
-            <div class="absolute bottom-0 left-1/3 h-[280px] w-[280px] rounded-full bg-gradient-to-br from-sky-100/60 to-blue-50 blur-3xl"></div>
+          <div class="absolute -top-6 -left-6 lg:-left-12 glass-panel rounded-2xl p-4 shadow-xl flex items-center gap-4 animate-float [animation-delay:1.5s]">
+            <div class="w-12 h-12 bg-kivu-primary-soft text-kivu-primary rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></div>
+            <div>
+              <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Ribuan</p>
+              <p class="text-sm font-bold text-gray-900 leading-tight">talenta siap membantu<br>bisnis kamu</p>
+            </div>
+          </div>
+
+          <div class="absolute top-1/4 -right-4 lg:-right-8 glass-panel rounded-2xl p-4 shadow-xl flex items-center gap-3 animate-float [animation-delay:2.5s]">
+            <div class="w-10 h-10 bg-kivu-yellow-soft text-kivu-yellow-800 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-lightbulb"></i></div>
+            <div>
+              <p class="text-sm font-bold text-gray-900">Solusi tugas kreatif,</p>
+              <p class="text-xs text-gray-500">cepat dan berkualitas</p>
+            </div>
+          </div>
+
+          <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 glass-panel rounded-full py-2 px-4 shadow-xl flex items-center gap-3 w-max">
+            <div>
+              <p class="text-sm font-extrabold text-gray-900">{{ $studentCount }}+</p>
+              <p class="text-[10px] text-gray-500 uppercase tracking-wide font-semibold">Talenta aktif</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-10 border-y border-kivu-border bg-kivu-bg-soft">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <p class="text-center text-sm font-semibold text-gray-500 mb-8 tracking-wide">Dipercaya oleh UMKM dan Talenta di Seluruh Indonesia</p>
+    <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
+      <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-cube text-kivu-primary"></i> BakulKita</div>
+      <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-store text-kivu-yellow"></i> TokoLokal</div>
+      <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-utensils text-green-500"></i> DapurNusantara</div>
+      <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-palette text-purple-500"></i> KreasiID</div>
+      <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-cart-shopping text-red-500"></i> LokaMart</div>
+      <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-handshake text-blue-500"></i> SahabatUMKM</div>
+    </div>
+  </div>
+</section>
+
+<section id="tentang" class="py-24 bg-white relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-kivu-primary-soft text-kivu-primary text-xs font-bold uppercase tracking-wider mb-6">
+          <i class="fa-solid fa-angles-right"></i> MENGENAL KIVU
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">Apa itu KIVU?</h2>
+        <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+          KIVU adalah platform yang mempertemukan mahasiswa dengan UMKM untuk menyelesaikan berbagai tugas, mulai dari desain, konten, riset, hingga pengembangan digital. Bersama KIVU, lebih banyak peluang untuk semua.
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="{{ route('register') }}" class="bg-kivu-yellow hover:bg-kivu-yellow-hover text-kivu-yellow-text font-bold rounded-full px-8 py-3 text-sm shadow-lg shadow-kivu-yellow/20 flex items-center gap-2">
+            Pelajari Lebih Lanjut <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="absolute -inset-3 bg-gradient-to-br from-kivu-primary/20 to-kivu-yellow/15 blur-2xl rounded-3xl -z-10"></div>
+        <div class="rounded-3xl overflow-hidden shadow-2xl relative border border-white/50 animate-float">
+          <img src="{{ asset('images/orang1.png') }}" alt="Mahasiswa Bekerja" class="w-full h-auto object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-kivu-primary/15 via-transparent to-transparent"></div>
+          <div class="absolute top-6 left-6 glass-panel rounded-xl p-3 flex items-center gap-3">
+            <div class="w-8 h-8 bg-kivu-yellow-soft text-kivu-yellow-800 rounded-lg flex items-center justify-center"><i class="fa-solid fa-comment-dots"></i></div>
+            <div>
+              <p class="text-xs font-bold text-gray-900">Ide jadi nyata</p>
+              <p class="text-[10px] text-gray-500">Bersama talenta muda</p>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -top-10 -left-10 w-40 h-40 bg-kivu-primary-soft rounded-full blur-3xl -z-10"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kategori" class="py-20 bg-kivu-bg-soft" x-data="{ showAll: false }">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-kivu-primary-soft text-kivu-primary text-xs font-bold uppercase tracking-wider mb-4">
+          <i class="fa-solid fa-angles-right"></i> JELAJAHI PELUANG
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Berbagai Kategori untuk Berbagai Kebutuhan</h2>
+        <p class="text-gray-600">Temukan talenta mahasiswa di bidang yang kamu butuhkan. Dari tugas kreatif hingga teknis, semua ada di KIVU.</p>
+      </div>
+      <button type="button" @click="showAll = !showAll" class="kivu-focus flex-shrink-0 text-kivu-primary font-semibold hover:text-kivu-primary-hover flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-kivu-border shadow-sm hover:shadow">
+        <span x-show="!showAll">Lihat Semua Kategori</span>
+        <span x-show="showAll" x-cloak>Lihat Lebih Sedikit</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    @php
+      $catMap = [
+        'desain-grafis' => ['fa-pen-nib','bg-gradient-to-br from-red-500 to-orange-400'],
+        'penulisan-konten' => ['fa-file-pen','bg-gradient-to-br from-blue-500 to-cyan-400'],
+        'social-media-management' => ['fa-share-nodes','bg-gradient-to-br from-green-500 to-emerald-400'],
+        'web-it' => ['fa-laptop-code','bg-gradient-to-br from-purple-500 to-indigo-500'],
+        'input-data-admin' => ['fa-database','bg-gradient-to-br from-indigo-500 to-blue-500'],
+        'digital-marketing' => ['fa-chart-pie','bg-gradient-to-br from-amber-400 to-orange-500'],
+        'video-animasi' => ['fa-video','bg-gradient-to-br from-yellow-400 to-amber-500'],
+        'fotografi-produk' => ['fa-camera','bg-gradient-to-br from-teal-500 to-cyan-500'],
+        'penerjemahan' => ['fa-language','bg-gradient-to-br from-cyan-500 to-sky-500'],
+        'konsultasi-bisnis' => ['fa-briefcase','bg-gradient-to-br from-fuchsia-500 to-purple-500'],
+        'lainnya' => ['fa-tag','bg-kivu-primary-soft'],
+      ];
+      $catFallback = ['fa-tag','bg-kivu-primary-soft'];
+    @endphp
+
+    <div class="relative" x-show="!showAll">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button type="button" @click="$refs.catScroll.scrollBy({ left: -320, behavior: 'smooth' })"
+          class="kivu-focus hidden md:flex shrink-0 h-12 w-12 items-center justify-center rounded-full border border-kivu-border bg-white text-kivu-primary shadow-sm transition hover:border-kivu-primary/40 hover:bg-kivu-primary-soft"
+          aria-label="Geser kategori ke kiri">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div x-ref="catScroll" class="no-scrollbar flex flex-1 scroll-smooth gap-3 sm:gap-4 overflow-x-auto px-1 py-2 snap-x snap-proximity">
+          @foreach($categories as $cat)
+            <x-domain.category-card :cat="$cat" :m="$catMap[$cat->slug] ?? $catFallback" :isActive="$category === $cat->slug" variant="scroll" />
+          @endforeach
         </div>
 
-        <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-2 lg:px-8">
-            <div class="reveal">
-                <p class="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                    <span class="flex h-2 w-2 rounded-full bg-blue-500"></span>
-                    Marketplace micro-freelance Mahasiswa × UMKM
-                </p>
-                <h1 class="mt-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                    Bangun portofolio.<br>
-                    <span class="bg-gradient-to-r from-blue-600 via-indigo-500 to-sky-500 bg-clip-text text-transparent">Bantu UMKM tumbuh.</span>
-                </h1>
-                <p class="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-                    KIVU menghubungkan mahasiswa berbakat dengan UMKM yang butuh bantuan nyata — desain, website, konten, dan tugas kreatif lainnya. Alur jelas: <span class="font-semibold text-gray-900">posting → lamar → kerja → dibayar</span>.
-                </p>
-                <div class="mt-8 flex flex-wrap items-center gap-3">
-                    <a href="{{ route('register') }}" class="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:shadow-blue-600/40">
-                        Mulai Sekarang — Gratis
-                        <x-icon name="arrow-right" :size="18" class="transition-transform group-hover:translate-x-0.5" />
-                    </a>
-                    <a href="#cara-kerja" class="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-7 py-3.5 text-sm font-semibold text-gray-700 transition hover:border-blue-200 hover:text-blue-600">Lihat Cara Kerja</a>
-                </div>
-                <p class="mt-4 text-xs text-gray-400">Email kampus <span class="font-semibold text-gray-600">.ac.id</span> langsung aktif. Gmail perlu verifikasi KTM.</p>
-            </div>
+        <button type="button" @click="$refs.catScroll.scrollBy({ left: 320, behavior: 'smooth' })"
+          class="kivu-focus hidden md:flex shrink-0 h-12 w-12 items-center justify-center rounded-full border border-kivu-border bg-white text-kivu-primary shadow-sm transition hover:border-kivu-primary/40 hover:bg-kivu-primary-soft"
+          aria-label="Geser kategori ke kanan">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+      <p class="mt-4 text-xs text-center text-gray-400">
+        Geser untuk melihat semua kategori <span class="hidden md:inline">atau gunakan tombol panah &rarr;</span><span class="md:hidden">&rarr;</span>
+      </p>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4" x-show="showAll" x-cloak>
+      @foreach($categories as $cat)
+        <x-domain.category-card :cat="$cat" :m="$catMap[$cat->slug] ?? $catFallback" :isActive="$category === $cat->slug" variant="grid" />
+      @endforeach
+    </div>
+  </div>
+</section>
 
-            <div class="reveal relative" style="transition-delay: 120ms">
-                <div class="relative mx-auto max-w-md">
-                    <div class="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-blue-400/30 via-indigo-300/20 to-sky-300/30 blur-2xl"></div>
-
-                    @forelse($projects->take(1) as $project)
-                    <div class="animate-float rounded-3xl border border-white/60 bg-white/80 p-6 shadow-xl shadow-blue-900/5 backdrop-blur">
-                        <div class="flex items-center justify-between gap-2">
-                            <p class="line-clamp-1 text-base font-bold text-gray-900">{{ $project->title }}</p>
-                            <x-ui.status-badge :value="$project->status" kind="project" />
-                        </div>
-                        <p class="mt-2 line-clamp-2 text-sm text-gray-500">{{ $project->description }}</p>
-                        <div class="mt-5 flex items-center justify-between">
-                            <div>
-                                <p class="text-xs text-gray-400">Budget</p>
-                                <p class="text-xl font-extrabold text-blue-600">Rp {{ number_format($project->budget, 0, ',', '.') }}</p>
-                            </div>
-                            <span class="flex items-center gap-1.5 text-xs text-gray-500">
-                                <x-ui.avatar :name="$project->owner->name ?? ''" size="xs" /> {{ $project->owner->name ?? 'UMKM' }}
-                            </span>
-                        </div>
-                        <a href="{{ route('login') }}" class="mt-5 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-sm font-semibold text-white transition hover:opacity-95">
-                            Lamar Proyek <x-icon name="arrow-right" :size="16" />
-                        </a>
-                    </div>
-                    @empty
-                    <div class="rounded-3xl border border-white/60 bg-white/80 p-8 text-center text-gray-400 shadow-xl backdrop-blur">
-                        Belum ada proyek terbuka saat ini.
-                    </div>
-                    @endforelse
-
-                    <div class="pointer-events-none absolute -top-6 -right-6 hidden rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-lg sm:block">
-                        <div class="flex items-center gap-1.5 text-amber-500">
-                            <x-icon name="star" :size="16" :filled="true" />
-                            <span class="text-sm font-bold text-gray-900">4.9</span>
-                        </div>
-                        <p class="text-xs text-gray-400">Rating UMKM</p>
-                    </div>
-                    <div class="pointer-events-none absolute -bottom-5 -left-5 hidden rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-lg sm:block">
-                        <div class="flex items-center gap-2 text-sm font-bold text-gray-900">
-                            <x-icon name="wallet" :size="16" class="text-blue-600" /> Dibayar Aman
-                        </div>
-                        <p class="text-xs text-gray-400">Wallet otomatis</p>
-                    </div>
-                </div>
-            </div>
+<section id="cara-kerja" class="py-24 bg-kivu-bg-soft">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-kivu-primary-soft text-kivu-primary text-xs font-bold uppercase tracking-wider mb-4"><i class="fa-solid fa-angles-right"></i> CARA KERJA</div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Dari Ide ke Dampak, Lebih Mudah Bersama KIVU</h2>
+      <p class="text-gray-600">Hanya 4 langkah sederhana untuk memulai.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+      <div class="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gray-200 z-0 border-t-2 border-dashed border-gray-300"></div>
+      @foreach([
+        ['Daftar','Buat akun sebagai mahasiswa atau pemilik UMKM.','fa-user','bg-blue-100','text-kivu-primary','border-kivu-primary'],
+        ['Temukan Tugas','Pilih tugas yang tersedia atau posting kebutuhan kamu.','fa-file-lines','bg-indigo-100','text-indigo-600','border-indigo-500'],
+        ['Kerjakan','Selesaikan tugas dengan bimbingan yang jelas.','fa-paper-plane','bg-sky-100','text-sky-600','border-sky-500'],
+        ['Raih Dampak','Dapatkan pembayaran dan bangun portofolio.','fa-trophy','bg-purple-100','text-purple-600','border-purple-500']
+      ] as $i => $s)
+        <div class="bg-white rounded-2xl p-8 border border-kivu-border shadow-sm relative z-10 text-center hover:-translate-y-2 transition-transform">
+          <div class="w-16 h-16 mx-auto {{ $s[3] }} {{ $s[4] }} rounded-full flex items-center justify-center text-2xl mb-6 shadow-inner relative">
+            <span class="absolute -top-2 -left-2 w-8 h-8 bg-white border-2 {{ $s[5] }} rounded-full flex items-center justify-center text-sm font-bold {{ $s[4] }}">{{ $i+1 }}</span>
+            <i class="fa-solid {{ $s[2] }}"></i>
+          </div>
+          <h3 class="font-bold text-xl text-gray-900 mb-3">{{ $s[0] }}</h3>
+          <p class="text-sm text-gray-600">{{ $s[1] }}</p>
         </div>
-    </section>
+      @endforeach
+    </div>
+    <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+      <div class="text-center"><div class="w-12 h-12 mx-auto bg-kivu-primary-soft text-kivu-primary rounded-full flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-user-graduate"></i></div><p class="text-3xl font-extrabold text-gray-900">{{ $studentCount }}+</p><p class="text-sm text-gray-500 font-medium">Talenta Aktif</p></div>
+      <div class="text-center"><div class="w-12 h-12 mx-auto bg-kivu-yellow-soft text-kivu-yellow-800 rounded-full flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-briefcase"></i></div><p class="text-3xl font-extrabold text-gray-900">{{ $openCount }}+</p><p class="text-sm text-gray-500 font-medium">Tugas Tersedia</p></div>
+      <div class="text-center"><div class="w-12 h-12 mx-auto bg-green-50 text-green-500 rounded-full flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-building"></i></div><p class="text-3xl font-extrabold text-gray-900">{{ $completedCount }}+</p><p class="text-sm text-gray-500 font-medium">UMKM Bergabung</p></div>
+      <div class="text-center"><div class="w-12 h-12 mx-auto bg-purple-50 text-purple-500 rounded-full flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-star"></i></div><p class="text-3xl font-extrabold text-gray-900">98%</p><p class="text-sm text-gray-500 font-medium">Kepuasan Pengguna</p></div>
+    </div>
+  </div>
+</section>
 
-    {{-- ============ LOGO / TRUST STRIP ============ --}}
-    <section class="border-y border-gray-100 bg-gray-50/60">
-        <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-            <p class="text-center text-xs font-semibold uppercase tracking-widest text-gray-400">Dipercaya mahasiswa & UMKM di Indonesia</p>
-            <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div class="rounded-2xl border border-gray-100 bg-white px-4 py-4 text-center">
-                    <p class="text-2xl font-extrabold text-gray-900"><span data-count="{{ $openCount }}">0</span><span class="text-blue-600">+</span></p>
-                    <p class="text-sm text-gray-500">Proyek Terbuka</p>
-                </div>
-                <div class="rounded-2xl border border-gray-100 bg-white px-4 py-4 text-center">
-                    <p class="text-2xl font-extrabold text-gray-900"><span data-count="{{ $studentCount }}">0</span><span class="text-blue-600">+</span></p>
-                    <p class="text-sm text-gray-500">Mahasiswa Aktif</p>
-                </div>
-                <div class="rounded-2xl border border-gray-100 bg-white px-4 py-4 text-center">
-                    <p class="text-2xl font-extrabold text-gray-900"><span data-count="{{ $completedCount }}">0</span><span class="text-blue-600">+</span></p>
-                    <p class="text-sm text-gray-500">Proyek Selesai</p>
-                </div>
-                <div class="rounded-2xl border border-gray-100 bg-white px-4 py-4 text-center">
-                    <p class="text-2xl font-extrabold text-gray-900">100<span class="text-blue-600">%</span></p>
-                    <p class="text-sm text-gray-500">Pembayaran Terjamin</p>
-                </div>
-            </div>
+<section id="testimoni" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-kivu-primary-soft text-kivu-primary text-xs font-bold uppercase tracking-wider mb-4"><i class="fa-solid fa-angles-right"></i> APA KATA MEREKA?</div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Dipercaya dan Direkomendasikan</h2>
+        <p class="text-gray-600">Dengarkan pengalaman langsung dari talenta dan pemilik UMKM.</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      @forelse($talent->take(3) as $student)
+        <div class="bg-kivu-bg-soft rounded-3xl p-8 border border-kivu-border flex flex-col h-full">
+          <div class="text-kivu-yellow flex gap-1 mb-6 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="text-gray-700 leading-relaxed mb-8 flex-1 italic">"KIVU membantu saya mendapatkan penghasilan dan pengalaman nyata. Sangat direkomendasikan!"</p>
+          <div class="flex items-center gap-4 mt-auto">
+            <span class="w-12 h-12 rounded-full bg-kivu-primary-soft text-kivu-primary flex items-center justify-center font-bold">{{ strtoupper(substr($student->name, 0, 1)) }}</span>
+            <div><h4 class="font-bold text-gray-900 text-sm">{{ $student->name }}</h4><p class="text-xs text-gray-500">Mahasiswa</p></div>
+          </div>
         </div>
-    </section>
+      @empty
+        <div class="bg-kivu-bg-soft rounded-3xl p-8 border border-kivu-border"><div class="text-kivu-yellow flex gap-1 mb-6 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="text-gray-700 italic">"KIVU membantu saya mendapatkan tambahan penghasilan sekaligus pengalaman profesional."</p><div class="flex items-center gap-4 mt-6"><h4 class="font-bold text-sm text-gray-900">Rani Putri</h4><p class="text-xs text-gray-500">Mahasiswa Desain</p></div></div>
+        <div class="bg-kivu-bg-soft rounded-3xl p-8 border border-kivu-border"><div class="text-kivu-yellow flex gap-1 mb-6 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="text-gray-700 italic">"Talenta di KIVU sangat kreatif dan responsif. Hasil kerjanya melebihi ekspektasi."</p><div class="flex items-center gap-4 mt-6"><h4 class="font-bold text-sm text-gray-900">Budi Santoso</h4><p class="text-xs text-gray-500">Pemilik UMKM</p></div></div>
+        <div class="bg-kivu-bg-soft rounded-3xl p-8 border border-kivu-border"><div class="text-kivu-yellow flex gap-1 mb-6 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div><p class="text-gray-700 italic">"Platform yang sangat membantu UMKM seperti kami. Harga terjangkau dengan kualitas memuaskan."</p><div class="flex items-center gap-4 mt-6"><h4 class="font-bold text-sm text-gray-900">Sari Melati</h4><p class="text-xs text-gray-500">Pemilik UMKM</p></div></div>
+      @endforelse
+    </div>
+  </div>
+</section>
 
-    {{-- ============ PELUANG ============ --}}
-    <section id="peluang" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-sm font-semibold uppercase tracking-widest text-blue-600">Peluang Nyata</p>
-            <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Proyek dari UMKM terverifikasi</h2>
-            <p class="mt-3 text-gray-500">Budget transparan, deskripsi jelas, siap untuk dikerjakan.</p>
-            <div class="relative mx-auto mt-6 max-w-md">
-                <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                    <x-icon name="search" :size="18" />
-                </span>
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari proyek..." class="h-12 w-full rounded-full border border-gray-200 bg-white pl-11 pr-4 text-sm text-gray-800 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-            </div>
-        </div>
+<section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div class="bg-kivu-primary rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-kivu-primary-active rounded-full mix-blend-multiply filter blur-3xl opacity-70 -translate-y-1/2 translate-x-1/2"></div>
+    <div class="relative z-10 max-w-2xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-sm border border-white/30"><i class="fa-solid fa-rocket"></i> MULAI SEKARANG</div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">Siap Jadi Bagian dari Perubahan?</h2>
+      <p class="text-blue-100 text-lg">Bergabung dengan KIVU dan temukan lebih banyak peluang untuk mengembangkan potensi kamu.</p>
+    </div>
+    <div class="relative z-10 flex flex-col items-center sm:items-end w-full md:w-auto flex-shrink-0">
+      <a href="{{ route('register') }}" class="w-full sm:w-auto bg-kivu-yellow hover:bg-kivu-yellow-hover text-kivu-yellow-text font-bold rounded-full px-8 py-4 text-lg shadow-xl flex items-center justify-center gap-2">Daftar Sekarang <i class="fa-solid fa-arrow-right"></i></a>
+      <p class="text-blue-200 text-xs mt-3 flex items-center gap-2"><i class="fa-solid fa-check"></i> Gratis &bull; Proses cepat &bull; Tanpa ribet</p>
+    </div>
+  </div>
+</section>
 
-        <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            @forelse($projects as $i => $project)
-            <div class="reveal group flex flex-col rounded-3xl border border-gray-100 bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-500/5" style="transition-delay: {{ $i * 60 }}ms">
-                <div class="flex items-start justify-between gap-3">
-                    <h3 class="line-clamp-1 text-base font-bold text-gray-900">{{ $project->title }}</h3>
-                    <x-ui.status-badge :value="$project->status" kind="project" />
-                </div>
-                <p class="mt-2 line-clamp-2 flex-1 text-sm text-gray-500">{{ $project->description }}</p>
-                <div class="mt-5 flex items-center justify-between pt-4">
-                    <div>
-                        <p class="text-lg font-extrabold text-blue-600">Rp {{ number_format($project->budget, 0, ',', '.') }}</p>
-                        <p class="flex items-center gap-1.5 text-xs text-gray-400">
-                            <x-ui.avatar :name="$project->owner->name ?? ''" size="xs" /> {{ $project->owner->name ?? 'UMKM' }}
-                        </p>
-                    </div>
-                    <a href="{{ route('login') }}" class="inline-flex items-center gap-1 rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 transition group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white">
-                        Detail <x-icon name="arrow-right" :size="14" />
-                    </a>
-                </div>
-            </div>
-            @empty
-            <div class="col-span-full rounded-3xl border border-dashed border-gray-200 bg-white px-6 py-16 text-center text-sm text-gray-400">
-                Tidak ada proyek yang cocok. Coba kata kunci lain.
-            </div>
-            @endforelse
+<footer class="bg-white pt-20 pb-10 border-t border-kivu-border">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+      <div class="lg:col-span-2">
+        <a href="/" class="flex items-center gap-2 mb-6"><img src="{{ asset('images/kivu-logo.png') }}" alt="KIVU" class="h-8 w-auto"></a>
+        <p class="text-gray-500 text-sm mb-6 max-w-sm">Lebih Banyak Peluang untuk Semua. Platform yang menghubungkan talenta muda berbakat dengan UMKM di seluruh Indonesia.</p>
+        <div class="flex gap-4">
+          <a href="#" class="w-10 h-10 rounded-full bg-kivu-bg-soft flex items-center justify-center text-gray-500 hover:bg-kivu-primary hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="w-10 h-10 rounded-full bg-kivu-bg-soft flex items-center justify-center text-gray-500 hover:bg-kivu-primary hover:text-white transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="w-10 h-10 rounded-full bg-kivu-bg-soft flex items-center justify-center text-gray-500 hover:bg-kivu-primary hover:text-white transition-colors"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="w-10 h-10 rounded-full bg-kivu-bg-soft flex items-center justify-center text-gray-500 hover:bg-kivu-primary hover:text-white transition-colors"><i class="fa-brands fa-tiktok"></i></a>
         </div>
-    </section>
+      </div>
+      <div><h4 class="font-bold text-gray-900 mb-6 uppercase text-sm tracking-wider">Untuk UMKM</h4><ul class="space-y-4 text-sm text-gray-600"><li><a href="{{ route('register') }}" class="hover:text-kivu-primary">Posting Tugas</a></li><li><a href="#peluang" class="hover:text-kivu-primary">Cari Talenta</a></li><li><a href="{{ route('register') }}" class="hover:text-kivu-primary">Daftar UMKM</a></li></ul></div>
+      <div><h4 class="font-bold text-gray-900 mb-6 uppercase text-sm tracking-wider">Untuk Talenta</h4><ul class="space-y-4 text-sm text-gray-600"><li><a href="#peluang" class="hover:text-kivu-primary">Cari Tugas</a></li><li><a href="{{ route('register') }}" class="hover:text-kivu-primary">Daftar Mahasiswa</a></li></ul></div>
+      <div><h4 class="font-bold text-gray-900 mb-6 uppercase text-sm tracking-wider">Tentang</h4><ul class="space-y-4 text-sm text-gray-600"><li><a href="#tentang" class="hover:text-kivu-primary">Tentang KIVU</a></li><li><a href="#cara-kerja" class="hover:text-kivu-primary">Cara Kerja</a></li><li><a href="#" class="hover:text-kivu-primary">Kebijakan Privasi</a></li></ul></div>
+    </div>
+    <div class="pt-8 border-t border-kivu-border flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-gray-500">&copy; {{ date('Y') }} KIVU. Semua hak dilindungi.</p>
+      <div class="flex gap-6 text-sm text-gray-500"><a href="#" class="hover:text-gray-900">Kebijakan Privasi</a><a href="#" class="hover:text-gray-900">Syarat &amp; Ketentuan</a></div>
+    </div>
+  </div>
+</footer>
 
-    {{-- ============ FITUR ============ --}}
-    <section id="fitur" class="border-y border-gray-100 bg-gray-50/60">
-        <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-            <div class="reveal mx-auto max-w-2xl text-center">
-                <p class="text-sm font-semibold uppercase tracking-widest text-blue-600">Kenapa KIVU</p>
-                <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Semua yang kamu butuhkan untuk mulai berkarya</h2>
-            </div>
-            <div class="mt-12 grid gap-6 md:grid-cols-3">
-                <div class="reveal rounded-3xl border border-gray-100 bg-white p-8 transition hover:shadow-xl hover:shadow-blue-500/5">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/25">
-                        <x-icon name="briefcase" :size="26" />
-                    </div>
-                    <h3 class="mt-5 text-lg font-bold text-gray-900">Peluang Terkurasi</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-gray-500">Proyek dari UMKM terverifikasi dengan budget transparan dan deskripsi jelas. Pilih sesuai skill-mu.</p>
-                </div>
-                <div class="reveal rounded-3xl border border-gray-100 bg-white p-8 transition hover:shadow-xl hover:shadow-blue-500/5" style="transition-delay: 80ms">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/25">
-                        <x-icon name="wallet" :size="26" />
-                    </div>
-                    <h3 class="mt-5 text-lg font-bold text-gray-900">Pembayaran Terjamin</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-gray-500">Submission disetujui → transaksi tercatat → saldo wallet bertambah otomatis. Tanpa ribet.</p>
-                </div>
-                <div class="reveal rounded-3xl border border-gray-100 bg-white p-8 transition hover:shadow-xl hover:shadow-blue-500/5" style="transition-delay: 160ms">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/25">
-                        <x-icon name="star" :size="26" :filled="true" />
-                    </div>
-                    <h3 class="mt-5 text-lg font-bold text-gray-900">Portofolio & Reputasi</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-gray-500">Selesaikan proyek, kumpulkan review, dan bangun kredibilitas profesional sejak kuliah.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- ============ TALENT ============ --}}
-    <section id="talent" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-sm font-semibold uppercase tracking-widest text-blue-600">Talent Terbaik</p>
-            <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Dipercaya lewat review nyata</h2>
-            <p class="mt-3 text-gray-500">Mahasiswa aktif dengan reputasi terbaik di KIVU.</p>
-        </div>
-        <div class="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
-            @forelse($talent as $i => $student)
-            <div class="reveal rounded-3xl border border-gray-100 bg-white p-6 text-center transition hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/5" style="transition-delay: {{ $i * 50 }}ms">
-                <x-ui.avatar :name="$student->name" size="lg" class="mx-auto" />
-                <p class="mt-3 flex items-center justify-center gap-1.5 truncate text-sm font-bold text-gray-900">{{ $student->name }}</p>
-                <div class="mt-1 flex items-center justify-center">
-                    <x-ui.verified-badge :user="$student" />
-                </div>
-                <p class="text-xs text-gray-400">Mahasiswa terverifikasi</p>
-                <div class="mt-3 inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-600">
-                    <x-icon name="star" :size="14" :filled="true" /> {{ $student->review_count }} <span class="font-normal text-amber-500">review</span>
-                </div>
-                <a href="{{ route('talents.show', $student->id) }}" class="mt-4 inline-flex w-full items-center justify-center rounded-full border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:border-blue-600 hover:text-blue-600">Lihat Profil</a>
-            </div>
-            @empty
-            <p class="col-span-full py-10 text-center text-sm text-gray-400">Belum ada mahasiswa terdaftar.</p>
-            @endforelse
-        </div>
-    </section>
-
-    {{-- ============ CARA KERJA ============ --}}
-    <section id="cara-kerja" class="border-y border-gray-100 bg-gray-50/60">
-        <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-            <div class="reveal mx-auto max-w-2xl text-center">
-                <p class="text-sm font-semibold uppercase tracking-widest text-blue-600">Cara Kerja</p>
-                <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Empat langkah menuju transaksi selesai</h2>
-            </div>
-            <div class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-                @foreach([
-                    ['1', 'UMKM Posting', 'Buat proyek: judul, deskripsi, budget. Status terbuka.'],
-                    ['2', 'Mahasiswa Lamar', 'Temukan peluang, lihat detail, kirim lamaran.'],
-                    ['3', 'Kerja & Kirim', 'Diterima → kerjakan → submit hasil.'],
-                    ['4', 'Setujui & Bayar', 'UMKM setujui → transaksi & wallet otomatis.'],
-                ] as $i => $step)
-                <div class="reveal relative text-center" style="transition-delay: {{ $i * 80 }}ms">
-                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-xl font-extrabold text-white shadow-lg shadow-blue-600/25">{{ $step[0] }}</div>
-                    <h3 class="mt-5 text-base font-bold text-gray-900">{{ $step[1] }}</h3>
-                    <p class="mt-2 text-sm text-gray-500">{{ $step[2] }}</p>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    {{-- ============ PANEL MAHASISWA / UMKM ============ --}}
-    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div class="grid gap-6 lg:grid-cols-2">
-            <div class="reveal overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-8 text-white sm:p-10">
-                <p class="text-xs font-semibold uppercase tracking-widest text-blue-200">Untuk Mahasiswa</p>
-                <h3 class="mt-3 text-2xl font-extrabold">Cari penghasilan dari skill kamu</h3>
-                <p class="mt-3 text-sm leading-relaxed text-blue-100">Jelajahi peluang, lamar proyek sesuai keahlian, dan dapatkan bayaran langsung ke wallet. Cocok untuk desain, coding, menulis, dan lainnya.</p>
-                <ul class="mt-6 space-y-3 text-sm text-blue-50">
-                    <li class="flex items-center gap-3"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-white/15"><x-icon name="check" :size="14" /></span> Peluang OPEN yang terkurasi</li>
-                    <li class="flex items-center gap-3"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-white/15"><x-icon name="check" :size="14" /></span> Status lamaran yang jelas</li>
-                    <li class="flex items-center gap-3"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-white/15"><x-icon name="check" :size="14" /></span> Wallet & riwayat transaksi transparan</li>
-                </ul>
-                <a href="{{ route('register') }}" class="mt-8 inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50">Daftar sebagai Mahasiswa</a>
-            </div>
-            <div class="reveal overflow-hidden rounded-3xl bg-gray-900 p-8 text-white sm:p-10" style="transition-delay: 80ms">
-                <p class="text-xs font-semibold uppercase tracking-widest text-blue-300">Untuk UMKM</p>
-                <h3 class="mt-3 text-2xl font-extrabold">Temukan talent mahasiswa terbaik</h3>
-                <p class="mt-3 text-sm leading-relaxed text-gray-300">Posting kebutuhanmu, kelola pelamar, review hasil, dan setujui pembayaran hanya saat puas. Proses cepat dan terkontrol.</p>
-                <ul class="mt-6 space-y-3 text-sm text-gray-200">
-                    <li class="flex items-center gap-3"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-white/10"><x-icon name="check" :size="14" /></span> Buat proyek dalam hitungan menit</li>
-                    <li class="flex items-center gap-3"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-white/10"><x-icon name="check" :size="14" /></span> Kelola pelamar & submission terpusat</li>
-                    <li class="flex items-center gap-3"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-white/10"><x-icon name="check" :size="14" /></span> Bayar setelah hasil disetujui</li>
-                </ul>
-                <a href="{{ route('register') }}" class="mt-8 inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-500">Daftar sebagai UMKM</a>
-            </div>
-        </div>
-    </section>
-
-    {{-- ============ TESTIMONI ============ --}}
-    <section class="border-y border-gray-100 bg-gray-50/60">
-        <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-            <div class="reveal mx-auto max-w-2xl text-center">
-                <p class="text-sm font-semibold uppercase tracking-widest text-blue-600">Testimoni</p>
-                <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Mereka sudah merasakan KIVU</h2>
-            </div>
-            <div class="mt-12 grid gap-6 md:grid-cols-3">
-                @foreach([
-                    ['Desain logo UMKM jadi profesional dalam 3 hari. Bayaran langsung masuk wallet. Sangat membantu saya bangun portofolio.', 'Rini', 'Mahasiswa Desain'],
-                    ['Pelamar datang banyak dan berkualitas. Saya tinggal pilih, review hasil, lalu bayar. Prosesnya jauh lebih cepat dari cara lama.', 'Budi', 'Pemilik UMKM Kopi'],
-                    ['Akhirnya ada tempat aman untuk kerjaan freelance semasa kuliah. Wallet & riwayat transaksinya transparan.', 'Sari', 'Mahasiswa IT'],
-                ] as $i => $tv)
-                <div class="reveal rounded-3xl border border-gray-100 bg-white p-7" style="transition-delay: {{ $i * 80 }}ms">
-                    <div class="flex gap-1 text-amber-500">
-                        @for($s = 0; $s < 5; $s++)<x-icon name="star" :size="16" :filled="true" />@endfor
-                    </div>
-                    <p class="mt-4 text-sm leading-relaxed text-gray-600">"{{ $tv[0] }}"</p>
-                    <div class="mt-5 flex items-center gap-3 border-t border-gray-100 pt-4">
-                        <x-ui.avatar :name="$tv[1]" size="sm" />
-                        <div>
-                            <p class="text-sm font-bold text-gray-900">{{ $tv[1] }}</p>
-                            <p class="text-xs text-gray-400">{{ $tv[2] }}</p>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    {{-- ============ CTA AKHIR ============ --}}
-    <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div class="reveal relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-indigo-600 to-sky-600 px-6 py-16 text-center text-white sm:px-12 sm:py-20">
-            <div class="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
-            <div class="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
-            <div class="relative mx-auto max-w-2xl">
-                <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Siap mulai perjalanan KIVU?</h2>
-                <p class="mt-3 text-blue-100">Bergabung sekarang — gratis untuk mahasiswa & UMKM.</p>
-                <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-                    <a href="{{ route('register') }}" class="inline-flex items-center rounded-full bg-white px-8 py-4 text-sm font-semibold text-blue-700 shadow-lg transition hover:bg-blue-50">Buat Akun Sekarang</a>
-                    <a href="{{ route('login') }}" class="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">Masuk</a>
-                </div>
-                <p class="mt-5 text-xs text-blue-200">Tanpa kartu kredit · Email kampus langsung aktif</p>
-            </div>
-        </div>
-    </section>
-
-    {{-- ============ FOOTER ============ --}}
-    <footer class="border-t border-gray-100 bg-white">
-        <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-4 py-10 sm:flex-row sm:px-6 lg:px-8">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('images/kivu-logo.png') }}" alt="KIVU" class="h-7 w-auto">
-                <span class="text-sm text-gray-400">© {{ date('Y') }} Marketplace Mahasiswa × UMKM</span>
-            </div>
-            <nav class="flex items-center gap-6 text-sm text-gray-500">
-                <a href="#peluang" class="transition hover:text-blue-600">Peluang</a>
-                <a href="#talent" class="transition hover:text-blue-600">Talent</a>
-                <a href="#cara-kerja" class="transition hover:text-blue-600">Cara Kerja</a>
-            </nav>
-            <p class="text-xs text-gray-400">Dibuat dengan Laravel + Livewire + Tailwind CSS</p>
-        </div>
-    </footer>
+<script>
+  document.getElementById('kivu-hamburger')?.addEventListener('click', function(){
+    document.getElementById('kivu-mobile-menu')?.classList.toggle('hidden');
+  });
+  document.querySelectorAll('#kivu-mobile-menu a').forEach(function(a){
+    a.addEventListener('click', function(){ document.getElementById('kivu-mobile-menu')?.classList.add('hidden'); });
+  });
+  window.addEventListener('scroll', function(){
+    var nav = document.getElementById('kivu-navbar');
+    if (nav && window.scrollY > 10) nav.classList.add('shadow-sm'); else if (nav) nav.classList.remove('shadow-sm');
+  });
+</script>
 </div>

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
             $table->unsignedBigInteger('amount');
-            $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED'])->default('PENDING');
+            $table->string('status', 20)->default('PENDING');
             $table->string('bank_name')->nullable();
             $table->string('bank_account')->nullable();
             $table->text('note')->nullable();

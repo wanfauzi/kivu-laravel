@@ -22,17 +22,17 @@ class Dashboard extends Component
             ->whereIn('status', ['PENDING', 'ACCEPTED'])
             ->count();
 
-        $acceptedProjects = Application::where('student_id', $user->id)
-            ->where('status', 'ACCEPTED')
+        $submittableProjectIds = Application::where('student_id', $user->id)
+            ->whereIn('status', ['PENDING', 'ACCEPTED'])
             ->pluck('project_id');
 
-        // Menunggu kirim hasil: diterima tapi belum ada submission, atau submission diminta revisi
-        $awaitingSubmissionProjects = Project::whereIn('id', $acceptedProjects)
-            ->where('status', 'IN_PROGRESS')
+        // Menunggu kirim hasil: proyek terbuka/menunggu review, app aktif, belum ada submission (non-revisi)
+        $awaitingSubmissionProjects = Project::whereIn('id', $submittableProjectIds)
+            ->whereIn('status', ['OPEN', 'SUBMITTED'])
             ->where(function ($q) use ($user) {
-                $q->whereDoesntHave('submission', function ($sub) use ($user) {
+                $q->whereDoesntHave('submissions', function ($sub) use ($user) {
                     $sub->where('student_id', $user->id);
-                })->orWhereHas('submission', function ($sub) use ($user) {
+                })->orWhereHas('submissions', function ($sub) use ($user) {
                     $sub->where('student_id', $user->id)->where('status', 'REVISION');
                 });
             })
@@ -56,6 +56,22 @@ class Dashboard extends Component
 
         $opportunities = Project::where('status', 'OPEN')->latest()->take(6)->get();
 
+        $monthly = Transaction::where('student_id', $user->id)
+            ->where('type', 'payment')
+            ->where('status', 'SUCCESS')
+            ->where('created_at', '>=', now()->subMonths(5)->startOfMonth())
+            ->get(['amount', 'created_at'])
+            ->groupBy(fn ($t) => $t->created_at->format('Y-m'))
+            ->map(fn ($rows) => (int) $rows->sum('amount'));
+
+        $earningsLabels = [];
+        $earningsData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i);
+            $earningsLabels[] = $month->translatedFormat('M');
+            $earningsData[] = $monthly[$month->format('Y-m')] ?? 0;
+        }
+
         return view('livewire.student.dashboard', [
             'balance' => $wallet->balance,
             'activeApplications' => $activeApplications,
@@ -63,6 +79,8 @@ class Dashboard extends Component
             'totalEarnings' => $totalEarnings,
             'latestApplications' => $latestApplications,
             'opportunities' => $opportunities,
+            'earningsLabels' => $earningsLabels,
+            'earningsData' => $earningsData,
         ])->layout('components.layouts.dashboard');
     }
 }

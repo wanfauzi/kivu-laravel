@@ -153,6 +153,14 @@ php artisan serve
 
 > ⚠️ Kredensial ini **hanya untuk demo**. Ganti sebelum produksi (lihat [`security.md`](security.md)).
 
+Muat ulang **data demo lengkap** (9 proyek berbagai status, lamaran, submission, dompet, penarikan, transaksi, ulasan, sengketa, portofolio) dengan:
+
+```bash
+php artisan demo:reset --force
+```
+
+Rincian akun & data: [`docs/demo-data.md`](docs/demo-data.md).
+
 ## Menjalankan
 
 **Pengembangan** (hot reload + server):

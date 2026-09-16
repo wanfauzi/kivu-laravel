@@ -1,13 +1,14 @@
-@props(['value' => '', 'kind' => 'project'])
+@props(['value' => '', 'kind' => 'project', 'dot' => false])
 
 @php
     $map = [
         'project' => [
+            'DRAFT' => ['Belum Dibayar', 'warning'],
             'OPEN' => ['Terbuka', 'success'],
-            'IN_PROGRESS' => ['Dikerjakan', 'blue'],
+            'IN_PROGRESS' => ['Dikerjakan', 'primary'],
             'SUBMITTED' => ['Menunggu Review', 'warning'],
-            'COMPLETED' => ['Selesai', 'brand'],
-            'CANCELLED' => ['Dibatalkan', 'error'],
+            'COMPLETED' => ['Selesai', 'info'],
+            'CANCELLED' => ['Dibatalkan', 'neutral'],
         ],
         'application' => [
             'PENDING' => ['Menunggu', 'warning'],
@@ -27,7 +28,7 @@
             'CANCELLED' => ['Dibatalkan', 'neutral'],
         ],
         'transaction' => [
-            'RECORDED' => ['Tercatat', 'blue'],
+            'RECORDED' => ['Tercatat', 'warning'],
             'SUCCESS' => ['Berhasil', 'success'],
             'REJECTED' => ['Ditolak', 'error'],
         ],
@@ -44,4 +45,4 @@
     $variant = $entry[1];
 @endphp
 
-<x-ui.pill :tone="$variant" {{ $attributes }}>{{ $label }}</x-ui.pill>
+<x-ui.badge :variant="$variant" :dot="$dot" {{ $attributes }}>{{ $label }}</x-ui.badge>

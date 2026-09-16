@@ -1,10 +1,32 @@
-@props(['label' => null, 'error' => null, 'id' => null])
-<div class="space-y-1.5">
-    @if($label)
-        <label for="{{ $id }}" class="block text-sm font-medium text-[var(--kivu-text-primary)]">{{ $label }}</label>
+@props(['label' => null, 'name' => null, 'id' => null, 'error' => null, 'hint' => null, 'required' => false])
+
+@php
+    $fieldId = $id ?? $name ?? 'field-'.\Illuminate\Support\Str::random(6);
+    $errorId = $fieldId.'-error';
+    $hintId = $fieldId.'-hint';
+    $describedBy = trim(($error ? $errorId : '').' '.($hint ? $hintId : ''));
+@endphp
+
+<div class="space-y-1.5" {{ $attributes->only('class') }}>
+    @if ($label)
+        <label for="{{ $fieldId }}" class="block text-sm font-medium text-kivu-text">
+            {{ $label }}@if ($required)<span class="text-kivu-danger">*</span>@endif
+        </label>
     @endif
-    <input id="{{ $id }}" {{ $attributes->merge(['class' => 'w-full rounded-lg border border-[var(--kivu-border)] bg-white px-3 py-2.5 text-sm outline-none focus:border-[var(--kivu-primary)] focus:ring-2 focus:ring-[var(--kivu-primary-soft)]']) }}>
-    @if($error)
-        <p class="text-xs text-[var(--kivu-danger)]">{{ $error }}</p>
+
+    <input
+        id="{{ $fieldId }}"
+        @if ($name) name="{{ $name }}" @endif
+        @if ($describedBy) aria-describedby="{{ $describedBy }}" @endif
+        @if ($error) aria-invalid="true" @endif
+        @if ($required) required @endif
+        {{ $attributes->except('class')->merge(['class' => 'kivu-input h-11 px-3.5 text-sm']) }} />
+
+    @if ($hint && ! $error)
+        <p id="{{ $hintId }}" class="text-xs text-kivu-text-muted">{{ $hint }}</p>
+    @endif
+
+    @if ($error)
+        <p id="{{ $errorId }}" class="text-xs font-medium text-kivu-danger">{{ $error }}</p>
     @endif
 </div>

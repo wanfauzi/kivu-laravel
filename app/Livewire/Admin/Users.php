@@ -12,12 +12,17 @@ class Users extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $role = '';
+
     public string $status = '';
 
     public ?int $pendingUserId = null;
+
     public string $pendingAction = '';
+
     public bool $confirming = false;
+
     public ?int $viewingKtmId = null;
 
     protected $queryString = ['search', 'role', 'status'];
@@ -105,8 +110,8 @@ class Users extends Component
 
         if ($this->search !== '') {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%');
+                $q->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%');
             });
         }
 

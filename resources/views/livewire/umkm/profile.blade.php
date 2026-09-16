@@ -1,48 +1,67 @@
 <div class="mx-auto max-w-2xl space-y-6">
-    <div>
-        <h1 class="text-2xl font-bold tracking-tight text-gray-900">Profil UMKM</h1>
-        <p class="text-sm text-gray-500">Kelola informasi akun bisnis Anda.</p>
-    </div>
+    <x-ui.page-header title="Profil UMKM" subtitle="Kelola informasi akun dan bisnis Anda." />
 
-    <div class="rounded-2xl border border-gray-200 bg-white p-6">
+    <div class="kivu-card p-6">
         <div class="flex items-center gap-4">
-            <x-ui.avatar :name="auth()->user()->name" size="lg" />
-            <div>
-                <p class="text-lg font-bold text-gray-900">{{ auth()->user()->name }}</p>
-                <p class="text-sm text-gray-500">{{ auth()->user()->email }}</p>
-                @if(auth()->user()->business_name)
-                    <p class="text-xs text-gray-400">{{ auth()->user()->business_name }}</p>
+            <x-ui.avatar :name="auth()->user()->business_name ?: auth()->user()->name" size="xl" />
+            <div class="min-w-0">
+                <p class="truncate text-lg font-bold text-kivu-text">{{ auth()->user()->business_name ?: auth()->user()->name }}</p>
+                <p class="truncate text-sm text-kivu-text-muted">{{ auth()->user()->email }}</p>
+                @if (auth()->user()->business_name)
+                    <p class="mt-0.5 text-xs text-kivu-text-muted">Penanggung jawab: {{ auth()->user()->name }}</p>
                 @endif
             </div>
         </div>
     </div>
 
-    <div class="rounded-2xl border border-gray-200 bg-white p-6">
-        <h3 class="text-lg font-bold text-gray-900">Ubah Profil</h3>
-        <form wire:submit.prevent="updateProfile" class="mt-4 space-y-4">
+    <div class="kivu-card p-6">
+        <h3 class="text-lg font-bold text-kivu-text">Ubah Profil</h3>
+
+        <form wire:submit="updateProfile" class="mt-5 space-y-4">
             <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Nama</label>
-                <input type="text" wire:model="name" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                @error('name') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
+                <label for="umkm-business-name" class="mb-1.5 block text-sm font-medium text-kivu-text">Nama Usaha / Bisnis</label>
+                <input id="umkm-business-name" type="text" wire:model="business_name" placeholder="Contoh: Warung Kopi Menangan"
+                    class="kivu-input px-3.5 py-2.5 text-sm" />
+                @error('business_name')
+                    <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                @enderror
+                <p class="mt-1 text-xs text-kivu-text-muted">Nama ini tampil di kartu proyek dan profil publik.</p>
             </div>
+
             <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Password Saat Ini</label>
-                <input type="password" wire:model="current_password" placeholder="Kosongkan bila tidak ganti password" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                @error('current_password') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
+                <label for="umkm-name" class="mb-1.5 block text-sm font-medium text-kivu-text">Nama Penanggung Jawab</label>
+                <input id="umkm-name" type="text" wire:model="name" class="kivu-input px-3.5 py-2.5 text-sm" />
+                @error('name')
+                    <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                @enderror
             </div>
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Password Baru</label>
-                <input type="password" wire:model="password" placeholder="Minimal 8 karakter" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                @error('password') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
+
+            <div class="grid grid-cols-1 gap-4 border-t border-kivu-border pt-4 sm:grid-cols-3">
+                <div>
+                    <label for="umkm-current-password" class="mb-1.5 block text-sm font-medium text-kivu-text">Password Saat Ini</label>
+                    <input id="umkm-current-password" type="password" wire:model="current_password" placeholder="Kosongkan bila tidak ganti"
+                        class="kivu-input px-3.5 py-2.5 text-sm" />
+                    @error('current_password')
+                        <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="umkm-password" class="mb-1.5 block text-sm font-medium text-kivu-text">Password Baru</label>
+                    <input id="umkm-password" type="password" wire:model="password" placeholder="Minimal 8 karakter"
+                        class="kivu-input px-3.5 py-2.5 text-sm" />
+                    @error('password')
+                        <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="umkm-password-confirm" class="mb-1.5 block text-sm font-medium text-kivu-text">Konfirmasi Password</label>
+                    <input id="umkm-password-confirm" type="password" wire:model="password_confirmation" class="kivu-input px-3.5 py-2.5 text-sm" />
+                </div>
             </div>
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Konfirmasi Password Baru</label>
-                <input type="password" wire:model="password_confirmation" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-            </div>
-            <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700" wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="updateProfile">Simpan Perubahan</span>
-                <span wire:loading wire:target="updateProfile">Menyimpan...</span>
-            </button>
+
+            <x-ui.button type="submit" loading-target="updateProfile" loading-label="Menyimpan...">
+                Simpan Perubahan
+            </x-ui.button>
         </form>
     </div>
 </div>

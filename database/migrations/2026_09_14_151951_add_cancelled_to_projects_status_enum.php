@@ -7,11 +7,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE projects MODIFY status ENUM('OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED', 'CANCELLED') NOT NULL DEFAULT 'OPEN'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE projects MODIFY status ENUM('OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED', 'CANCELLED') NOT NULL DEFAULT 'OPEN'");
+        }
     }
 
     public function down(): void
     {
-        DB::statement("ALTER TABLE projects MODIFY status ENUM('OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED') NOT NULL DEFAULT 'OPEN'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE projects MODIFY status ENUM('OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED') NOT NULL DEFAULT 'OPEN'");
+        }
     }
 };

@@ -13,29 +13,39 @@ class SubmissionPolicy
 
     public function create(User $user, Project $project): bool
     {
-        if ($user->role !== 'student' || $project->status !== 'IN_PROGRESS') {
+        if ($user->role !== 'student' || $project->status !== 'OPEN') {
             return false;
         }
 
-        $isAccepted = $project->applications()
+        $hasActiveApplication = $project->applications()
             ->where('student_id', $user->id)
-            ->where('status', 'ACCEPTED')
+            ->whereIn('status', ['PENDING', 'ACCEPTED'])
             ->exists();
 
-        if (!$isAccepted) {
+        if (! $hasActiveApplication) {
             return false;
         }
 
-        return !Submission::where('project_id', $project->id)
+        return ! Submission::where('project_id', $project->id)
             ->where('student_id', $user->id)
+            ->where('status', '!=', 'REVISION')
             ->exists();
     }
 
     public function resubmit(User $user, Submission $submission): bool
     {
-        return $user->role === 'student'
-            && $user->id === $submission->student_id
-            && $submission->status === 'REVISION';
+        if ($user->role !== 'student' || $user->id !== $submission->student_id) {
+            return false;
+        }
+
+        if ($submission->status !== 'REVISION') {
+            return false;
+        }
+
+        return $submission->project->applications()
+            ->where('student_id', $user->id)
+            ->where('status', 'ACCEPTED')
+            ->exists();
     }
 
     public function view(User $user, Submission $submission): bool

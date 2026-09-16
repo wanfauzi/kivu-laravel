@@ -71,12 +71,12 @@ Mahasiswa `.ac.id` aktif & terverifikasi otomatis; mahasiswa non-`.ac.id` perlu 
 
 ## 5.2 Mahasiswa
 
-Login → Dashboard → Peluang → Detail Proyek → Lamar → menunggu diterima → Kirim Hasil → (opsional: diminta Revisi → kirim ulang) → menunggu dibayar → Dompet → Tarik Saldo.
+Login → Dashboard → Peluang → Detail Proyek → Lamar → Kirim Hasil → (opsional: jika jadi pemenang & diminta Revisi → kirim ulang) → menunggu rilis → Dompet → Tarik Saldo.
 Tambahan: verifikasi KTM (Profil), kelola bio/skill & portofolio, batalkan lamaran, batalkan penarikan, ajukan sengketa.
 
 ## 5.3 UMKM
 
-Login → Dashboard → Buat Proyek → isi judul/deskripsi/budget → Post (OPEN) → Proyek Saya → Pelamar → Terima/Tolak → tinjau hasil → Setujui & Bayar **atau** Minta Revisi → beri Review.
+Login → Dashboard → Buat Proyek → isi judul/deskripsi/budget → Post (OPEN) → Proyek Saya → lihat hasil masuk → **Pilih Pemenang** → tinjau hasil pemenang → Rilis Dana **atau** Minta Revisi (pemenang) → beri Review.
 Tambahan: edit/batalkan proyek (selama OPEN), lihat profil/reputasi pelamar, ajukan sengketa, profil.
 
 ## 5.4 Admin
@@ -151,16 +151,15 @@ flowchart LR
 
 # 7. Golden Path MVP
 
-Posting → Lamar → Terima → Kirim → Setujui → Bayar → Selesai
+Posting → Lamar → Kirim Hasil → Pilih Pemenang → Rilis Dana → Selesai
 
 | Tahap | Aktor | Output | Status |
 | --- | --- | --- | --- |
 | Posting | UMKM | Project dibuat | OPEN |
 | Lamar | Mahasiswa | Application dibuat | PENDING |
-| Terima | UMKM | Application diterima; proyek berjalan | ACCEPTED / IN_PROGRESS |
-| Kirim | Mahasiswa | Submission dikirim | SUBMITTED |
-| Setujui | UMKM | Submission disetujui | APPROVED |
-| Bayar | Sistem | Transaction dibuat; saldo bertambah | COMPLETED |
+| Kirim Hasil | Mahasiswa | Banyak submission masuk | OPEN / SUBMITTED |
+| Pilih Pemenang | UMKM | Pemenang ACCEPTED, lain REJECTED | SUBMITTED |
+| Rilis Dana | UMKM | Transaction dibuat; saldo pemenang bertambah | COMPLETED |
 | Selesai | Sistem/UMKM | Proyek selesai; dapat review | COMPLETED |
 
 # 8. Functional Requirements
@@ -188,7 +187,7 @@ Kolom **Status** mencerminkan implementasi saat ini: ✅ selesai, ◐ sebagian.
 | STU-02 | Melihat Project Detail | P0 | Judul, deskripsi, budget, pemilik, tanggal. | ✅ |
 | STU-03 | Apply project | P0 | Application PENDING, tidak duplikat. | ✅ |
 | STU-04 | Melihat status application | P0 | Status jelas (PENDING/ACCEPTED/REJECTED/WITHDRAWN). | ✅ |
-| STU-05 | Submit Work setelah accepted | P0 | Submission SUBMITTED. | ✅ |
+| STU-05 | Submit Work selagi proyek aktif | P0 | Submission SUBMITTED (semua pelamar; 1 aktif/mahasiswa). | ✅ |
 | STU-06 | Melihat Wallet | P1 | Saldo, pendapatan, histori transaksi. | ✅ |
 | STU-07 | Withdrawal | P1 | Penarikan tercatat dengan status jelas. | ✅ |
 | STU-08 | Verifikasi KTM | P1 | Unggah KTM; admin verifikasi; lencana terverifikasi. | ✅ |
@@ -206,12 +205,12 @@ Kolom **Status** mencerminkan implementasi saat ini: ✅ selesai, ◐ sebagian.
 | BUS-01 | Create Project | P0 | Judul, deskripsi, budget; status OPEN. | ✅ |
 | BUS-02 | My Projects | P0 | Dikelompokkan per status. | ✅ |
 | BUS-03 | Melihat applicants | P0 | Applicant, status, reputasi terlihat. | ✅ |
-| BUS-04 | Accept applicant | P0 | Application ACCEPTED; proyek IN_PROGRESS (maks. 1). | ✅ |
+| BUS-04 | Melihat semua submission & pilih pemenang | P0 | Pemenang ACCEPTED, lain REJECTED; proyek menunggu review. | ✅ |
 | BUS-05 | Melihat submission | P0 | Hasil dapat ditinjau. | ✅ |
-| BUS-06 | Approve submission | P0 | Submission APPROVED; payment dicatat. | ✅ |
+| BUS-06 | Approve & release dana | P0 | Submission pemenang APPROVED; payment dicatat. | ✅ |
 | BUS-07 | Give review | P1 | Review tersimpan setelah selesai. | ✅ |
 | BUS-08 | Reject applicant | P1 | Status REJECTED + catatan alasan. | ✅ |
-| BUS-09 | Minta revisi | P1 | Submission REVISION + catatan; proyek kembali IN_PROGRESS. | ✅ |
+| BUS-09 | Minta revisi (pemenang) | P1 | Submission REVISION + catatan. | ✅ |
 | BUS-10 | Edit proyek (OPEN) | P1 | Ubah judul/deskripsi/budget. | ✅ |
 | BUS-11 | Batalkan proyek (OPEN) | P1 | Status CANCELLED; lamaran PENDING otomatis ditolak. | ✅ |
 | BUS-12 | Ajukan & batalkan sengketa | P1 | Sengketa OPEN; pelapor dapat membatalkan. | ✅ |
@@ -233,12 +232,12 @@ Kolom **Status** mencerminkan implementasi saat ini: ✅ selesai, ◐ sebagian.
 - BR-01. Project baru selalu `OPEN`.
 - BR-02. Hanya project `OPEN` yang dapat menerima application.
 - BR-03. Mahasiswa tidak dapat membuat application duplikat pada project yang sama (unique `project_id+student_id`).
-- BR-04. Saat UMKM menerima satu applicant, application menjadi `ACCEPTED` dan project `IN_PROGRESS`. Maksimal **satu** pelamar diterima per proyek.
-- BR-05. Hanya mahasiswa dengan application `ACCEPTED` yang dapat membuat submission.
+- BR-04. Semua pelamar dapat mengirim hasil kerja selagi proyek `OPEN`/`SUBMITTED`. UMKM memilih **satu pemenang** dari hasil yang masuk; pemenang menjadi `ACCEPTED`, lamaran lain `REJECTED`.
+- BR-05. Hanya mahasiswa dengan lamaran aktif (`PENDING`/`ACCEPTED`) yang dapat membuat submission, dan hanya satu submission aktif (non-revisi) per mahasiswa per proyek.
 - BR-06. Submission yang dikirim berstatus `SUBMITTED`.
-- BR-07. UMKM dapat menyetujui submission valid (`APPROVED`) **atau** meminta revisi (`REVISION` + catatan).
-- BR-08. Approval memicu pencatatan transaction pembayaran.
-- BR-09. Transaction pembayaran menambah saldo wallet mahasiswa.
+- BR-07. UMKM dapat menyetujui submission pemenang valid (`APPROVED`) **atau** meminta revisi (`REVISION` + catatan). Revisi hanya untuk pemenang (`ACCEPTED`).
+- BR-08. Approval memicu pencatatan transaction pembayaran sebesar **bid pemenang** (fallback budget).
+- BR-09. Transaction pembayaran menambah saldo wallet mahasiswa pemenang.
 - BR-10. Setelah pembayaran dicatat, project menjadi `COMPLETED`.
 - BR-11. Withdrawal harus berstatus dan diproses sesuai kewenangan Admin; saldo tidak boleh hilang bila ditolak (dikembalikan).
 - BR-12. User hanya mengubah data yang menjadi kewenangannya.
@@ -247,36 +246,37 @@ Kolom **Status** mencerminkan implementasi saat ini: ✅ selesai, ◐ sebagian.
 - BR-15. Mahasiswa `pending_ktm` **tetap boleh** melamar/mengirim hasil (diberi peringatan lembut), namun lencana "Mahasiswa Terverifikasi" hanya muncul setelah verifikasi.
 - BR-16. Melamar ulang diperbolehkan setelah lamaran `WITHDRAWN` (baris lamaran direset ke `PENDING`).
 - BR-17. Sengketa dapat dibuka pada proyek `IN_PROGRESS`, `SUBMITTED`, atau `COMPLETED`; maksimal **satu sengketa OPEN per pelapor per proyek**.
-- BR-18. Penyelesaian sengketa: **Refund** (dana dibalikkan bila sudah dibayar; proyek dibuka kembali) atau **Release** (submission disetujui & dibayar); Release hanya bila belum dibayar.
+- BR-18. Penyelesaian sengketa: **Refund** (dana dibalikkan bila sudah dibayar; proyek dibuka kembali, **semua** submission dihapus & **semua** lamaran direset ke `PENDING`) atau **Release** (submission pemenang disetujui & dibayar); Release hanya bila belum dibayar.
 - BR-19. Pembatalan proyek `OPEN` otomatis menolak semua lamaran `PENDING` proyek tersebut.
 - BR-20. Portofolio publik maksimal 12 item per mahasiswa; file dibatasi JPG/PNG/PDF ≤ 4MB.
+- BR-21. Berkas hasil kerja disimpan **privat** dan hanya dapat diunduh melalui rute ber-otorisasi (pemilik submission, pemilik proyek, admin).
+- BR-22. Pemenang dipilih dalam **dua tahap**: UMKM memilih (`ACCEPTED`, lain `REJECTED`) lalu mereview/merilis dana; proyek selesai (`COMPLETED`) hanya setelah **Release**.
 
 # 10. State Machine
 
 ## 10.1 Project
 
-`OPEN → IN_PROGRESS → SUBMITTED → COMPLETED`; `OPEN → CANCELLED`; `COMPLETED` dapat kembali `OPEN` melalui **Refund** sengketa.
+`OPEN → SUBMITTED → COMPLETED`; `OPEN → CANCELLED`; `COMPLETED` dapat kembali `OPEN` melalui **Refund** sengketa.
 
 ```mermaid
 stateDiagram-v2
     [*] --> OPEN
-    OPEN --> IN_PROGRESS: applicant accepted
+    OPEN --> SUBMITTED: student submits work
     OPEN --> CANCELLED: UMKM batalkan
-    IN_PROGRESS --> SUBMITTED: student submits work
-    SUBMITTED --> IN_PROGRESS: UMKM minta revisi
-    SUBMITTED --> COMPLETED: UMKM approves + payment
+    SUBMITTED --> COMPLETED: UMKM pilih pemenang + release dana
     COMPLETED --> OPEN: refund (dispute)
     COMPLETED --> [*]
     CANCELLED --> [*]
 ```
+> Catatan: `IN_PROGRESS` tidak lagi digunakan sebagai tahap alur inti pada model kontes terbuka (seluruh pelamar langsung mengirim hasil selagi `OPEN`/`SUBMITTED`).
 
 ## 10.2 Application
 
-`PENDING → ACCEPTED | REJECTED | WITHDRAWN` (mahasiswa dapat melamar ulang setelah `WITHDRAWN`).
+`PENDING → ACCEPTED | REJECTED | WITHDRAWN` (mahasiswa dapat melamar ulang setelah `WITHDRAWN`). ACCEPTED hanya untuk **pemenang**; REJECTED untuk yang tidak terpilih.
 
 ## 10.3 Submission
 
-`(belum ada) → SUBMITTED → APPROVED`; `SUBMITTED → REVISION → SUBMITTED` (kirim ulang).
+`(belum ada) → SUBMITTED → APPROVED`; `SUBMITTED → REVISION → SUBMITTED` (kirim ulang, **hanya pemenang**). Banyak mahasiswa dapat memiliki submission pada proyek yang sama (kontes terbuka).
 
 ## 10.4 Withdrawal
 
@@ -468,6 +468,15 @@ Revisi submission, tolak pelamar + catatan, edit/batalkan proyek, pembatalan lam
 ## 16.4 Out of Scope
 
 Realtime chat, video call, AI matching kompleks, payment gateway produksi, escrow bank sungguhan, aplikasi mobile native, recommendation engine kompleks, social network penuh.
+
+## 16.5 Future Features (30% Offline Competition)
+
+Fitur berikut direncanakan untuk diimplementasikan pada tahap final offline:
+- **Real-time Chat & Notifications**: Optimalisasi sistem pesan instan dan push notifications.
+- **Escrow & Payment Gateway**: Integrasi pembayaran otomatis (Midtrans/Xendit) untuk keamanan dana.
+- **AI-Based Job Recommendation**: Sistem pencocokan otomatis proyek dengan keahlian mahasiswa.
+- **Advanced Analytics**: Visualisasi data performa ekonomi bagi UMKM dan portofolio progresif bagi mahasiswa.
+- **Project Milestones**: Fitur termin pembayaran untuk proyek berskala menengah/besar.
 
 # 17. Demo Account & Scenario
 

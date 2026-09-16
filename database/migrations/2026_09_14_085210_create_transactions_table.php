@@ -13,8 +13,8 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
             $table->unsignedBigInteger('amount');
-            $table->enum('type', ['payment', 'withdrawal'])->default('payment');
-            $table->enum('status', ['RECORDED', 'SUCCESS'])->default('RECORDED');
+            $table->string('type', 20)->default('payment');
+            $table->string('status', 20)->default('RECORDED');
             $table->timestamps();
         });
     }

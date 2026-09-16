@@ -13,12 +13,19 @@ use Livewire\Component;
 class MyApplications extends Component
 {
     public ?int $disputeProjectId = null;
+
     public string $reason = '';
+
     public string $description = '';
+
     public bool $confirmingDispute = false;
+
     public ?int $pendingWithdrawId = null;
+
     public bool $confirmingWithdraw = false;
+
     public ?int $pendingCancelDisputeId = null;
+
     public bool $confirmingCancelDispute = false;
 
     public function openDispute(int $projectId)
@@ -41,7 +48,7 @@ class MyApplications extends Component
     public function submitDispute()
     {
         $this->validate([
-            'reason' => 'required|in:' . implode(',', array_keys(Dispute::REASONS)),
+            'reason' => 'required|in:'.implode(',', array_keys(Dispute::REASONS)),
             'description' => 'required|string|min:10|max:2000',
         ]);
 
@@ -72,6 +79,7 @@ class MyApplications extends Component
         } catch (\RuntimeException $e) {
             $this->cancelDispute();
             session()->flash('error', $e->getMessage());
+
             return;
         }
 
@@ -127,7 +135,7 @@ class MyApplications extends Component
 
     public function render()
     {
-        $applications = Application::with(['project.owner', 'project.submission'])
+        $applications = Application::with(['project.owner', 'project.submissions'])
             ->where('student_id', Auth::id())
             ->latest()
             ->get();

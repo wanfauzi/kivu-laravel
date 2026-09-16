@@ -7,7 +7,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Portfolio extends Model
 {
-    protected $fillable = ['student_id', 'title', 'description', 'url', 'file_path'];
+    protected $fillable = ['student_id', 'title', 'description', 'url', 'file_path', 'is_service', 'price', 'delivery_days', 'category_id'];
+
+    protected function casts(): array
+    {
+        return [
+            'is_service' => 'boolean',
+            'price' => 'integer',
+            'delivery_days' => 'integer',
+        ];
+    }
+
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function student(): BelongsTo
     {
@@ -16,7 +30,7 @@ class Portfolio extends Model
 
     public function isImage(): bool
     {
-        if (!$this->file_path) {
+        if (! $this->file_path) {
             return false;
         }
 

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('status', ['PENDING', 'ACCEPTED', 'REJECTED'])->default('PENDING');
+            $table->string('status', 20)->default('PENDING');
             $table->text('message')->nullable();
             $table->timestamps();
             $table->unique(['project_id', 'student_id']);

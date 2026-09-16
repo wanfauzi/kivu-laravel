@@ -6,6 +6,8 @@ use App\Models\Application;
 use App\Models\Project;
 use App\Models\Review;
 use App\Models\User;
+use App\Notifications\ApplicationAccepted;
+use App\Notifications\ApplicationRejected;
 use App\Services\StudentTrust;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,12 +17,21 @@ use Livewire\Component;
 class ManageApplicants extends Component
 {
     public Project $project;
+
+    public string $sort = 'best';
+
     public bool $showModal = false;
+
     public bool $showRejectModal = false;
+
     public bool $showProfileModal = false;
+
     public ?int $selectedApplicantId = null;
+
     public ?Application $selectedApplicant = null;
+
     public ?User $viewingStudent = null;
+
     public string $rejection_note = '';
 
     public function mount(Project $project)
@@ -104,14 +115,20 @@ class ManageApplicants extends Component
             return null;
         });
 
-        $this->cancelAccept();
+        $this->showModal = false;
+        $this->selectedApplicantId = null;
+        $this->selectedApplicant = null;
 
         if ($result !== null) {
             session()->flash('error', $result);
+
             return;
         }
 
-        session()->flash('success', 'Pelamar berhasil diterima!');
+        $app->loadMissing('student');
+        $app->student?->notify(new ApplicationAccepted($this->project->refresh()));
+
+        session()->flash('success', 'Pelamar berhasil diterima sebagai kandidat!');
     }
 
     public function reject()
@@ -140,6 +157,9 @@ class ManageApplicants extends Component
         if ($result !== null) {
             session()->flash('error', $result);
         } else {
+            $app->loadMissing('student');
+            $app->student?->notify(new ApplicationRejected($this->project->refresh(), $this->rejection_note));
+
             session()->flash('success', 'Pelamar ditolak.');
         }
 
@@ -148,17 +168,46 @@ class ManageApplicants extends Component
 
     public function render()
     {
-        $applicants = Application::with('student')
+        $applicantsQuery = Application::with('student')
             ->where('project_id', $this->project->id)
-            ->latest()
             ->get();
 
-        $studentIds = $applicants->pluck('student_id')->unique();
+        $studentIds = $applicantsQuery->pluck('student_id')->unique();
         $ratings = Review::whereIn('reviewee_id', $studentIds)
             ->selectRaw('reviewee_id, AVG(rating) as avg_rating, COUNT(*) as total')
             ->groupBy('reviewee_id')
             ->get()
             ->keyBy('reviewee_id');
+
+        $applicants = $applicantsQuery->sort(function ($a, $b) use ($ratings) {
+            $ra = $ratings->get($a->student_id);
+            $rb = $ratings->get($b->student_id);
+            $avgA = $ra ? $ra->avg_rating : 0;
+            $avgB = $rb ? $rb->avg_rating : 0;
+
+            if ($this->sort === 'rating') {
+                return $avgB <=> $avgA;
+            } elseif ($this->sort === 'verified') {
+                $va = $a->student->isVerifiedStudent() ? 1 : 0;
+                $vb = $b->student->isVerifiedStudent() ? 1 : 0;
+                return $vb <=> $va;
+            } elseif ($this->sort === 'bid_asc') {
+                return ($a->bid_amount ?? 0) <=> ($b->bid_amount ?? 0);
+            } elseif ($this->sort === 'newest') {
+                return $b->created_at <=> $a->created_at;
+            } else {
+                // 'best': verified desc + rating desc + newest
+                $va = $a->student->isVerifiedStudent() ? 1 : 0;
+                $vb = $b->student->isVerifiedStudent() ? 1 : 0;
+                if ($va !== $vb) {
+                    return $vb <=> $va;
+                }
+                if ($avgA !== $avgB) {
+                    return $avgB <=> $avgA;
+                }
+                return $b->created_at <=> $a->created_at;
+            }
+        });
 
         return view('livewire.umkm.manage-applicants', [
             'applicants' => $applicants,

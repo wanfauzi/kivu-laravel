@@ -1,4 +1,5 @@
-@props(['padding' => 'p-6'])
-<div {{ $attributes->merge(['class' => "bg-white border border-[var(--kivu-border)] rounded-xl $padding"]) }}>
+@props(['padding' => 'p-5', 'as' => 'div'])
+
+<{{ $as }} {{ $attributes->merge(['class' => "kivu-card {$padding}"]) }}>
     {{ $slot }}
-</div>
+</{{ $as }}>

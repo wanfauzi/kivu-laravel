@@ -12,8 +12,11 @@ class Projects extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $status = '';
+
     public ?int $projectToModerate = null;
+
     public bool $confirmingRemove = false;
 
     protected $queryString = ['search', 'status'];
@@ -50,6 +53,7 @@ class Projects extends Component
         if ($project->status === 'COMPLETED') {
             $this->cancelRemove();
             session()->flash('error', 'Proyek selesai tidak dapat ditakedown. Gunakan Refund di menu Sengketa.');
+
             return;
         }
 
@@ -63,10 +67,10 @@ class Projects extends Component
         $query = Project::with('owner');
 
         if ($this->search !== '') {
-            $query->where('title', 'like', '%' . $this->search . '%');
+            $query->where('title', 'like', '%'.$this->search.'%');
         }
 
-        if (in_array($this->status, ['OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED'], true)) {
+        if (in_array($this->status, ['OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED', 'CANCELLED'], true)) {
             $query->where('status', $this->status);
         }
 

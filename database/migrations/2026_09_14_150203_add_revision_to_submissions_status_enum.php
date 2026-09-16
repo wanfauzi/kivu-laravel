@@ -9,7 +9,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE submissions MODIFY status ENUM('SUBMITTED', 'APPROVED', 'REVISION') NOT NULL DEFAULT 'SUBMITTED'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE submissions MODIFY status ENUM('SUBMITTED', 'APPROVED', 'REVISION') NOT NULL DEFAULT 'SUBMITTED'");
+        }
         Schema::table('submissions', function (Blueprint $table) {
             $table->text('revision_note')->nullable()->after('note');
         });
@@ -20,6 +22,8 @@ return new class extends Migration
         Schema::table('submissions', function (Blueprint $table) {
             $table->dropColumn('revision_note');
         });
-        DB::statement("ALTER TABLE submissions MODIFY status ENUM('SUBMITTED', 'APPROVED') NOT NULL DEFAULT 'SUBMITTED'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE submissions MODIFY status ENUM('SUBMITTED', 'APPROVED') NOT NULL DEFAULT 'SUBMITTED'");
+        }
     }
 };

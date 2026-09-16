@@ -18,6 +18,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/ktm/{user}', [\App\Http\Controllers\KtmController::class, 'show'])->name('ktm.show');
 
+    Route::get('/submission-file/{submission}', [\App\Http\Controllers\SubmissionFileController::class, 'show'])->name('submission-file');
+
+    Route::get('/application-file/{application}', [\App\Http\Controllers\ApplicationFileController::class, 'show'])->name('application-file');
+
     Route::get('/dashboard', function () {
         $user = auth()->user();
         if ($user->role === 'student') return redirect('/student');
@@ -32,6 +36,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/opportunities', \App\Livewire\Student\Opportunities::class)->name('student.opportunities');
         Route::get('/project/{project}', \App\Livewire\Student\ProjectDetail::class)->name('student.project-detail');
         Route::get('/applications', \App\Livewire\Student\MyApplications::class)->name('student.my-applications');
+        Route::get('/inbox', \App\Livewire\Messages\Inbox::class)->name('student.inbox');
         Route::get('/submit-work/{project}', \App\Livewire\Student\SubmitWork::class)->name('student.submit-work');
         Route::get('/wallet', \App\Livewire\Student\Wallet::class)->name('student.wallet');
     });
@@ -40,9 +45,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/', \App\Livewire\Umkm\Dashboard::class)->name('umkm.dashboard');
         Route::get('/profile', \App\Livewire\Umkm\Profile::class)->name('umkm.profile');
         Route::get('/projects', \App\Livewire\Umkm\MyProjects::class)->name('umkm.my-projects');
+        Route::get('/inbox', \App\Livewire\Messages\Inbox::class)->name('umkm.inbox');
         Route::get('/create-project', \App\Livewire\Umkm\CreateProject::class)->name('umkm.create-project');
+        Route::get('/projects/{project}/fund', \App\Livewire\Umkm\ProjectFunding::class)->name('umkm.project-fund');
         Route::get('/projects/{project}/edit', \App\Livewire\Umkm\EditProject::class)->name('umkm.edit-project');
         Route::get('/manage-applicants/{project}', \App\Livewire\Umkm\ManageApplicants::class)->name('umkm.manage-applicants');
+        Route::get('/select-winner/{project}', \App\Livewire\Umkm\SelectWinner::class)->name('umkm.select-winner');
         Route::get('/review-submission/{project}', \App\Livewire\Umkm\ReviewSubmission::class)->name('umkm.review-submission');
     });
 

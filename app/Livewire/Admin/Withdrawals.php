@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Transaction;
+use App\Models\Wallet;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -14,10 +15,13 @@ class Withdrawals extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $status = '';
 
     public ?int $pendingWdId = null;
+
     public string $pendingType = '';
+
     public bool $confirming = false;
 
     protected $queryString = ['search', 'status'];
@@ -62,6 +66,7 @@ class Withdrawals extends Component
         $via = fn ($id) => function () use ($id) {
             $wd = Withdrawal::lockForUpdate()->findOrFail($id);
             Gate::authorize('update', $wd);
+
             return $wd;
         };
 
@@ -82,7 +87,7 @@ class Withdrawals extends Component
                 session()->flash('success', 'Penarikan disetujui.');
             } elseif ($this->pendingType === 'reject') {
                 $wd->update(['status' => 'REJECTED']);
-                $wallet = \App\Models\Wallet::where('student_id', $wd->student_id)->lockForUpdate()->first() ?? \App\Models\Wallet::firstOrCreate(['student_id' => $wd->student_id], ['balance' => 0]);
+                $wallet = Wallet::where('student_id', $wd->student_id)->lockForUpdate()->first() ?? Wallet::firstOrCreate(['student_id' => $wd->student_id], ['balance' => 0]);
                 $wallet->increment('balance', $wd->amount);
                 Transaction::create([
                     'student_id' => $wd->student_id,
@@ -104,7 +109,7 @@ class Withdrawals extends Component
 
         if ($this->search !== '') {
             $query->whereHas('student', function ($s) {
-                $s->where('name', 'like', '%' . $this->search . '%');
+                $s->where('name', 'like', '%'.$this->search.'%');
             });
         }
 

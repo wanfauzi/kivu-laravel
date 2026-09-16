@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Carbon::setLocale('id');
+        Carbon::setLocale('id');
+
+        Paginator::defaultView('vendor.pagination.kivu');
+        Paginator::defaultSimpleView('vendor.pagination.kivu');
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('against_id')->constrained('users')->cascadeOnDelete();
             $table->string('reason');
             $table->text('description');
-            $table->enum('status', ['OPEN', 'RESOLVED', 'REJECTED'])->default('OPEN');
+            $table->string('status', 20)->default('OPEN');
             $table->enum('resolution', ['refund', 'release'])->nullable();
             $table->foreignId('resolved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('resolved_at')->nullable();

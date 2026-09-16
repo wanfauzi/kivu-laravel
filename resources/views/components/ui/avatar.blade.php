@@ -1,4 +1,4 @@
-@props(['name' => '', 'size' => 'md'])
+@props(['name' => '', 'src' => null, 'size' => 'md', 'ring' => false])
 
 @php
     $clean = trim((string) $name);
@@ -11,14 +11,21 @@
         'xs' => 'h-7 w-7 text-[11px]',
         'sm' => 'h-8 w-8 text-xs',
         'lg' => 'h-12 w-12 text-base',
+        'xl' => 'h-16 w-16 text-lg',
         default => 'h-10 w-10 text-sm',
     };
+
+    $ringClass = $ring ? 'ring-2 ring-kivu-surface' : '';
 @endphp
 
-<span {{ $attributes->merge(['class' => "flex {$sizeClass} shrink-0 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700"]) }}>
-    @if ($initials !== '')
-        {{ $initials }}
-    @else
-        <x-icon name="user-round" :size="16" />
-    @endif
-</span>
+@if ($src)
+    <img src="{{ $src }}" alt="{{ $clean }}" {{ $attributes->merge(['class' => "{$sizeClass} {$ringClass} shrink-0 rounded-full object-cover"]) }}>
+@else
+    <span {{ $attributes->merge(['class' => "flex {$sizeClass} {$ringClass} shrink-0 items-center justify-center rounded-full bg-kivu-primary-soft font-semibold text-kivu-primary"]) }}>
+        @if ($initials !== '')
+            {{ $initials }}
+        @else
+            <x-icon name="user-round" :size="16" />
+        @endif
+    </span>
+@endif

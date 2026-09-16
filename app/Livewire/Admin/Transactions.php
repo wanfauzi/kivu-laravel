@@ -11,7 +11,9 @@ class Transactions extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $type = '';
+
     public string $status = '';
 
     protected $queryString = ['search', 'type', 'status'];
@@ -38,9 +40,9 @@ class Transactions extends Component
         if ($this->search !== '') {
             $query->where(function ($q) {
                 $q->whereHas('student', function ($s) {
-                    $s->where('name', 'like', '%' . $this->search . '%');
+                    $s->where('name', 'like', '%'.$this->search.'%');
                 })->orWhereHas('project', function ($p) {
-                    $p->where('title', 'like', '%' . $this->search . '%');
+                    $p->where('title', 'like', '%'.$this->search.'%');
                 });
             });
         }

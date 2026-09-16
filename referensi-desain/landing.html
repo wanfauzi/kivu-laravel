@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIVU - Platform Talenta Muda untuk UMKM</title>
+    <!-- Import Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Import Inter font for a clean, modern look similar to the design -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6', // Brand Blue
+                            600: '#2563eb', // Brand Blue Darker
+                            700: '#1d4ed8',
+                        },
+                        accent: {
+                            400: '#fbbf24',
+                            500: '#f59e0b', // Brand Yellow
+                            600: '#d97706',
+                        },
+                        gray: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            500: '#6b7280',
+                            800: '#1f2937',
+                            900: '#111827',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom utilities that might be tricky with just classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hero-blob {
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 60%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(219,234,254,1) 0%, rgba(219,234,254,0) 70%);
+            z-index: -1;
+            border-radius: 50%;
+        }
+        /* Hide scrollbar for category pills container */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white overflow-x-hidden antialiased">
+
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md border-b border-gray-100" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <div class="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary-500/30">
+                        K
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-gray-900">iVU</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium text-sm transition-colors">Tentang</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium text-sm transition-colors">Kategori</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium text-sm transition-colors">Tugas</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium text-sm transition-colors">Cara Kerja</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium text-sm transition-colors">Testimoni</a>
+                </div>
+
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="text-gray-900 hover:text-primary-600 font-semibold text-sm px-4 py-2 transition-colors">
+                        <i class="fa-solid fa-magnifying-glass mr-2 text-gray-400"></i>
+                    </button>
+                    <button class="text-primary-600 border border-primary-600 hover:bg-primary-50 font-semibold rounded-full px-6 py-2.5 text-sm transition-colors">
+                        Masuk
+                    </button>
+                    <button class="bg-accent-400 hover:bg-accent-500 text-gray-900 font-bold rounded-full px-6 py-2.5 text-sm transition-colors shadow-lg shadow-accent-400/30">
+                        Daftar Gratis
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-600 hover:text-gray-900 focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <!-- Abstract Background Shape -->
+        <div class="hero-blob hidden lg:block"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+                
+                <!-- Left Content -->
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-primary-700 text-xs font-semibold mb-6">
+                        <span class="w-2 h-2 rounded-full bg-primary-500"></span>
+                        Platform Talenta Mahasiswa untuk UMKM
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+                        Talenta Muda <br />
+                        untuk UMKM <br />
+                        yang <span class="text-primary-600 relative inline-block">
+                            Lebih Maju
+                            <!-- Decorative underline -->
+                            <svg class="absolute w-full h-3 -bottom-1 left-0 text-accent-400 opacity-70" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 0" stroke="currentColor" stroke-width="4" fill="none"/></svg>
+                        </span>
+                    </h1>
+                    
+                    <p class="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
+                        KIVU menghubungkan mahasiswa berbakat dengan UMKM di seluruh Indonesia untuk mengerjakan berbagai tugas secara fleksibel, terjangkau, dan berkualitas.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                        <button class="bg-accent-400 hover:bg-accent-500 text-gray-900 font-bold rounded-full px-8 py-3.5 text-base transition-colors shadow-lg shadow-accent-400/30 flex items-center justify-center gap-2 group">
+                            Mulai Sekarang
+                            <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                        <button class="bg-white border-2 border-gray-200 hover:border-primary-500 hover:text-primary-600 text-gray-700 font-semibold rounded-full px-8 py-3.5 text-base transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-circle-play text-primary-500 text-xl"></i>
+                            Lihat Tugas
+                        </button>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-6 text-sm text-gray-500 font-medium">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-primary-500"></i>
+                            Talenta Terverifikasi
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-lock text-primary-500"></i>
+                            Proses Aman & Transparan
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-headset text-primary-500"></i>
+                            Dukungan Penuh
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Content (Images & Cards) -->
+                <div class="relative mt-10 lg:mt-0">
+                    <!-- Main Image Composition -->
+                    <div class="relative w-full aspect-[4/3] max-w-[600px] mx-auto">
+                        <!-- Main Background Image (Students) -->
+                        <div class="absolute inset-0 rounded-[2.5rem] overflow-hidden bg-blue-100 shadow-2xl">
+                            <img src="https://placehold.co/800x600/dbeafe/1e3a8a?text=Mahasiswa+Berbakat" alt="Mahasiswa Berbakat" class="w-full h-full object-cover mix-blend-multiply opacity-90">
+                        </div>
+                        
+                        <!-- Floating Card 1: Ribuan Talenta -->
+                        <div class="absolute -top-6 -left-6 lg:-left-12 glass-panel rounded-2xl p-4 shadow-xl flex items-center gap-4 animate-[bounce_4s_infinite]">
+                            <div class="w-12 h-12 bg-blue-100 text-primary-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Ribuan</p>
+                                <p class="text-sm font-bold text-gray-900 leading-tight">talenta siap membantu<br>bisnis kamu</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating Card 2: Solusi Tugas -->
+                        <div class="absolute top-1/4 -right-4 lg:-right-8 glass-panel rounded-2xl p-4 shadow-xl flex items-center gap-3 animate-[bounce_5s_infinite_0.5s]">
+                             <div class="w-10 h-10 bg-yellow-100 text-accent-500 rounded-full flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900">Solusi tugas kreatif,</p>
+                                <p class="text-xs text-gray-500">cepat dan berkualitas</p>
+                            </div>
+                        </div>
+
+                        <!-- Floating Card 3: Active Talents Counter -->
+                        <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 glass-panel rounded-full py-2 px-4 shadow-xl flex items-center gap-3 w-max">
+                            <div class="flex -space-x-2">
+                                <img class="w-8 h-8 rounded-full border-2 border-white" src="https://placehold.co/100x100/e2e8f0/475569?text=User1" alt="User">
+                                <img class="w-8 h-8 rounded-full border-2 border-white" src="https://placehold.co/100x100/cbd5e1/334155?text=User2" alt="User">
+                                <img class="w-8 h-8 rounded-full border-2 border-white" src="https://placehold.co/100x100/94a3b8/1e293b?text=User3" alt="User">
+                            </div>
+                            <div>
+                                <p class="text-sm font-extrabold text-gray-900">2.500+</p>
+                                <p class="text-[10px] text-gray-500 uppercase tracking-wide font-semibold">Talenta aktif</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-10 border-y border-gray-100 bg-gray-50/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-sm font-semibold text-gray-500 mb-8 tracking-wide">Dipercaya oleh UMKM dan Talenta di Seluruh Indonesia</p>
+            
+            <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
+                <!-- Mock Logos -->
+                <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-cube text-primary-500"></i> BakulKita</div>
+                <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-store text-accent-500"></i> TokoLokal</div>
+                <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-utensils text-green-500"></i> DapurNusantara</div>
+                <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-palette text-purple-500"></i> KreasiID</div>
+                <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-cart-shopping text-red-500"></i> LokaMart</div>
+                <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fa-solid fa-handshake text-blue-500"></i> SahabatUMKM</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Left Content -->
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-primary-700 text-xs font-bold uppercase tracking-wider mb-6">
+                        <i class="fa-solid fa-angles-right text-primary-500"></i>
+                        MENGENAL KIVU
+                    </div>
+                    
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6">Apa itu KIVU?</h2>
+                    
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        KIVU adalah platform yang mempertemukan mahasiswa dengan UMKM untuk menyelesaikan berbagai tugas, mulai dari desain, konten, riset, hingga pengembangan digital. Bersama KIVU, lebih banyak peluang untuk semua.
+                    </p>
+                    
+                    <div class="flex flex-wrap items-center gap-4">
+                        <button class="bg-accent-400 hover:bg-accent-500 text-gray-900 font-bold rounded-full px-8 py-3 text-sm transition-colors shadow-lg shadow-accent-400/30 flex items-center gap-2">
+                            Pelajari Lebih Lanjut
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button class="text-gray-700 hover:text-primary-600 font-semibold px-4 py-3 text-sm transition-colors flex items-center gap-2">
+                            <i class="fa-regular fa-circle-play text-2xl"></i>
+                            Tonton Video
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Right Image -->
+                <div class="relative">
+                    <div class="rounded-3xl overflow-hidden shadow-2xl relative">
+                        <img src="https://placehold.co/800x600/f3f4f6/111827?text=Mahasiswa+Bekerja" alt="Mahasiswa Bekerja" class="w-full h-auto object-cover">
+                        
+                        <!-- Floating Elements -->
+                        <div class="absolute top-6 left-6 glass-panel rounded-xl p-3 flex items-center gap-3">
+                            <div class="w-8 h-8 bg-accent-100 text-accent-500 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-comment-dots"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-900">Ide jadi nyata</p>
+                                <p class="text-[10px] text-gray-500">Bersama talenta muda</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Decorative Text -->
+                        <div class="absolute bottom-10 -right-6 lg:-right-12 bg-white px-6 py-4 rounded-2xl shadow-xl transform rotate-3 z-10 border border-gray-100">
+                            <p class="font-caveat text-2xl text-gray-800 font-bold leading-tight">Lebih banyak<br>peluang untuk<br>semua</p>
+                            <!-- Decorative underline -->
+                            <svg class="w-full h-2 mt-1 text-accent-400" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 0" stroke="currentColor" stroke-width="4" fill="none"/></svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative background blob -->
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-100 rounded-full blur-3xl -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-50/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-primary-700 text-xs font-bold uppercase tracking-wider mb-4">
+                        <i class="fa-solid fa-angles-right text-primary-500"></i>
+                        JELAJAHI PELUANG
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Berbagai Kategori untuk Berbagai Kebutuhan</h2>
+                    <p class="text-gray-600">Temukan talenta mahasiswa di bidang yang kamu butuhkan. Dari tugas kreatif hingga teknis, semua ada di KIVU.</p>
+                </div>
+                <button class="flex-shrink-0 text-primary-600 font-semibold hover:text-primary-700 transition-colors flex items-center gap-2 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm hover:shadow">
+                    Lihat Semua Kategori
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <!-- Category Card 1 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-pen-nib"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Desain Grafis</h3>
+                    <p class="text-xs text-gray-500">Logo, Banner, dll</p>
+                </a>
+                
+                <!-- Category Card 2 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-file-pen"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Penulisan & Konten</h3>
+                    <p class="text-xs text-gray-500">Artikel, Copywriting</p>
+                </a>
+
+                <!-- Category Card 3 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-green-50 text-green-500 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Media Sosial</h3>
+                    <p class="text-xs text-gray-500">Konten, Manajemen</p>
+                </a>
+
+                <!-- Category Card 4 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Pengembangan Web</h3>
+                    <p class="text-xs text-gray-500">Website, Landing Page</p>
+                </a>
+
+                <!-- Category Card 5 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Data & Riset</h3>
+                    <p class="text-xs text-gray-500">Analisis, Survei</p>
+                </a>
+
+                <!-- Category Card 6 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-yellow-50 text-yellow-500 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Video & Animasi</h3>
+                    <p class="text-xs text-gray-500">Editing, Motion</p>
+                </a>
+
+                <!-- Category Card 7 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Fotografi & Editing</h3>
+                    <p class="text-xs text-gray-500">Foto Produk, Retouch</p>
+                </a>
+
+                <!-- Category Card 8 -->
+                <a href="#" class="group bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-16 h-16 mx-auto bg-gray-100 text-gray-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-ellipsis-stroke"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-1">Lainnya</h3>
+                    <p class="text-xs text-gray-500">Berbagai kebutuhan</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-10 gap-6">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-primary-700 text-xs font-bold uppercase tracking-wider mb-4">
+                        <i class="fa-solid fa-angles-right text-primary-500"></i>
+                        TEMUKAN PELUANG
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Tugas yang Diposting oleh Para Talenta</h2>
+                    <p class="text-gray-600">Pilih tugas yang sesuai dengan kebutuhanmu, atau posting tugas baru sekarang juga.</p>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="w-full lg:w-auto min-w-[300px]">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                        </div>
+                        <input type="text" class="block w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-full text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow" placeholder="Cari tugas, kategori, atau kata kunci...">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="flex overflow-x-auto hide-scrollbar gap-3 mb-10 pb-2">
+                <button class="flex-shrink-0 bg-primary-600 text-white px-5 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-md shadow-primary-500/20">
+                    <i class="fa-solid fa-border-all"></i>
+                    Semua
+                </button>
+                <button class="flex-shrink-0 bg-white border border-gray-200 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-5 py-2 rounded-full text-sm font-medium transition-colors">
+                    Desain Grafis
+                </button>
+                <button class="flex-shrink-0 bg-white border border-gray-200 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-5 py-2 rounded-full text-sm font-medium transition-colors">
+                    Konten
+                </button>
+                <button class="flex-shrink-0 bg-white border border-gray-200 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-5 py-2 rounded-full text-sm font-medium transition-colors">
+                    Sosial Media
+                </button>
+                <button class="flex-shrink-0 bg-white border border-gray-200 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-5 py-2 rounded-full text-sm font-medium transition-colors">
+                    Web Development
+                </button>
+                <button class="flex-shrink-0 bg-white border border-gray-200 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-5 py-2 rounded-full text-sm font-medium transition-colors">
+                    Data & Riset
+                </button>
+                <button class="flex-shrink-0 bg-white border border-gray-200 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-5 py-2 rounded-full text-sm font-medium transition-colors">
+                    Video
+                </button>
+                <button class="flex-shrink-0 bg-white border border-gray-200 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-5 py-2 rounded-full text-sm font-medium transition-colors">
+                    Lainnya
+                </button>
+            </div>
+
+            <!-- Task Cards Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Task Card 1 -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/1e293b/f8fafc?text=Desain+Kopi" alt="Desain Logo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-primary-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Desain Grafis
+                        </div>
+                        <button class="absolute top-4 right-4 w-8 h-8 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 transition-colors">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 leading-snug">Desain Logo untuk Brand Kopi Lokal</h3>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">Mencari talenta untuk membuat logo dan identitas visual brand kopi lokal kami.</p>
+                        
+                        <div class="flex items-center gap-3 mb-4 pt-4 border-t border-gray-100">
+                            <img src="https://placehold.co/100x100/e2e8f0/475569?text=U" alt="UMKM" class="w-8 h-8 rounded-full">
+                            <span class="text-sm font-medium text-gray-700">UMKM KopiKita</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-auto">
+                            <span class="text-primary-600 font-bold text-lg">Rp 300.000</span>
+                            <button class="text-gray-400 hover:text-primary-600 transition-colors">
+                                <i class="fa-regular fa-bookmark text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Card 2 -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/e2e8f0/1e293b?text=Artikel+Edukasi" alt="Penulisan Artikel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Konten
+                        </div>
+                        <button class="absolute top-4 right-4 w-8 h-8 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 transition-colors">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 leading-snug">Penulisan Artikel Edukasi UMKM</h3>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">Dibutuhkan 5 artikel SEO-friendly seputar bisnis UMKM untuk blog kami.</p>
+                        
+                        <div class="flex items-center gap-3 mb-4 pt-4 border-t border-gray-100">
+                            <img src="https://placehold.co/100x100/fecdd3/881337?text=T" alt="UMKM" class="w-8 h-8 rounded-full">
+                            <span class="text-sm font-medium text-gray-700">TokoLokal</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-auto">
+                            <span class="text-primary-600 font-bold text-lg">Rp 250.000</span>
+                            <button class="text-gray-400 hover:text-primary-600 transition-colors">
+                                <i class="fa-regular fa-bookmark text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Card 3 -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/fef08a/854d0e?text=Social+Media" alt="Social Media" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Sosial Media
+                        </div>
+                        <button class="absolute top-4 right-4 w-8 h-8 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 transition-colors">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 leading-snug">Kelola Instagram Selama 1 Bulan</h3>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">Buat konten, posting, dan laporan performa setiap minggu untuk akun food f&b.</p>
+                        
+                        <div class="flex items-center gap-3 mb-4 pt-4 border-t border-gray-100">
+                            <img src="https://placehold.co/100x100/bfdbfe/1e3a8a?text=D" alt="UMKM" class="w-8 h-8 rounded-full">
+                            <span class="text-sm font-medium text-gray-700">DapurNusantara</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-auto">
+                            <span class="text-primary-600 font-bold text-lg">Rp 500.000</span>
+                            <button class="text-gray-400 hover:text-primary-600 transition-colors">
+                                <i class="fa-regular fa-bookmark text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="mt-12 text-center">
+                 <button class="text-primary-600 font-semibold hover:text-primary-700 transition-colors flex items-center gap-2 mx-auto">
+                    Lihat Semua Tugas
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-gray-50/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-primary-700 text-xs font-bold uppercase tracking-wider mb-4">
+                    <i class="fa-solid fa-angles-right text-primary-500"></i>
+                    CARA KERJA
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Dari Ide ke Dampak, Lebih Mudah Bersama KIVU</h2>
+                <p class="text-gray-600">Hanya 4 langkah sederhana untuk memulai.</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+                <!-- Connecting Line (Desktop only) -->
+                <div class="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gray-200 z-0 border-t-2 border-dashed border-gray-300"></div>
+
+                <!-- Step 1 -->
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm relative z-10 text-center group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-blue-100 text-primary-600 rounded-full flex items-center justify-center text-2xl mb-6 shadow-inner relative">
+                        <span class="absolute -top-2 -left-2 w-8 h-8 bg-white border-2 border-primary-500 rounded-full flex items-center justify-center text-sm font-bold text-primary-600">1</span>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-900 mb-3">Daftar</h3>
+                    <p class="text-sm text-gray-600">Buat akun sebagai mahasiswa atau pemilik UMKM.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm relative z-10 text-center group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl mb-6 shadow-inner relative">
+                        <span class="absolute -top-2 -left-2 w-8 h-8 bg-white border-2 border-indigo-500 rounded-full flex items-center justify-center text-sm font-bold text-indigo-600">2</span>
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-900 mb-3">Temukan / Posting</h3>
+                    <p class="text-sm text-gray-600">Pilih tugas yang tersedia atau posting kebutuhan kamu.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm relative z-10 text-center group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-sky-100 text-sky-600 rounded-full flex items-center justify-center text-2xl mb-6 shadow-inner relative">
+                        <span class="absolute -top-2 -left-2 w-8 h-8 bg-white border-2 border-sky-500 rounded-full flex items-center justify-center text-sm font-bold text-sky-600">3</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-900 mb-3">Kerjakan</h3>
+                    <p class="text-sm text-gray-600">Selesaikan tugas dengan bimbingan yang jelas dari pemberi tugas.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm relative z-10 text-center group hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 mx-auto bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-2xl mb-6 shadow-inner relative">
+                        <span class="absolute -top-2 -left-2 w-8 h-8 bg-white border-2 border-purple-500 rounded-full flex items-center justify-center text-sm font-bold text-purple-600">4</span>
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-gray-900 mb-3">Raih Dampak</h3>
+                    <p class="text-sm text-gray-600">Dapatkan pembayaran dan bangun portofolio untuk masa depan lebih cerah.</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto bg-blue-50 text-primary-500 rounded-full flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <p class="text-3xl font-extrabold text-gray-900">2.500+</p>
+                    <p class="text-sm text-gray-500 font-medium">Talenta Aktif</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto bg-yellow-50 text-accent-500 rounded-full flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <p class="text-3xl font-extrabold text-gray-900">1.200+</p>
+                    <p class="text-sm text-gray-500 font-medium">Tugas Terselesaikan</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto bg-green-50 text-green-500 rounded-full flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+                    <p class="text-3xl font-extrabold text-gray-900">500+</p>
+                    <p class="text-sm text-gray-500 font-medium">UMKM Bergabung</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto bg-purple-50 text-purple-500 rounded-full flex items-center justify-center text-xl mb-3">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-3xl font-extrabold text-gray-900">98%</p>
+                    <p class="text-sm text-gray-500 font-medium">Kepuasan Pengguna</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-primary-700 text-xs font-bold uppercase tracking-wider mb-4">
+                        <i class="fa-solid fa-angles-right text-primary-500"></i>
+                        APA KATA MEREKA?
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Dipercaya dan Direkomendasikan</h2>
+                    <p class="text-gray-600">Dengarkan pengalaman langsung dari talenta dan pemilik UMKM.</p>
+                </div>
+                
+                <!-- Nav Buttons -->
+                <div class="flex gap-3">
+                    <button class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-primary-600 transition-colors">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-primary-600 transition-colors">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100 flex flex-col h-full">
+                    <div class="text-accent-400 flex gap-1 mb-6 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed mb-8 flex-1 italic">
+                        "KIVU membantu saya mendapatkan tambahan penghasilan sekaligus pengalaman profesional. Prosesnya mudah dan menyenangkan."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <img src="https://placehold.co/100x100/fecdd3/881337?text=R" alt="Rani" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Rani Putri</h4>
+                            <p class="text-xs text-gray-500">Mahasiswa Desain</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100 flex flex-col h-full">
+                    <div class="text-accent-400 flex gap-1 mb-6 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed mb-8 flex-1 italic">
+                        "Talenta di KIVU sangat kreatif dan responsif. Hasil kerjanya melebihi ekspektasi kami."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <img src="https://placehold.co/100x100/bfdbfe/1e3a8a?text=B" alt="Budi" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Budi Santoso</h4>
+                            <p class="text-xs text-gray-500">Pemilik UMKM Kuliner</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100 flex flex-col h-full">
+                    <div class="text-accent-400 flex gap-1 mb-6 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed mb-8 flex-1 italic">
+                        "Platform yang sangat membantu UMKM seperti kami. Harga terjangkau dengan kualitas kerja yang memuaskan."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <img src="https://placehold.co/100x100/d9f99d/3f6212?text=S" alt="Sari" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Sari Melati</h4>
+                            <p class="text-xs text-gray-500">Pemilik UMKM Fashion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="bg-primary-600 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
+            <!-- Decorative shapes -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-500 rounded-full mix-blend-multiply filter blur-3xl opacity-70 -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2"></div>
+            
+            <!-- Floating graphic elements (simplified for html) -->
+            <i class="fa-solid fa-certificate absolute top-10 right-20 text-4xl text-primary-400/50 -rotate-12"></i>
+            <i class="fa-solid fa-star absolute bottom-10 left-1/2 text-3xl text-accent-400/50 rotate-45"></i>
+            
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-sm border border-white/30">
+                    <i class="fa-solid fa-rocket"></i>
+                    MULAI SEKARANG
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
+                    Siap Jadi Bagian dari Perubahan?
+                </h2>
+                <p class="text-primary-100 text-lg">
+                    Bergabung dengan KIVU dan temukan lebih banyak peluang untuk mengembangkan potensi kamu.
+                </p>
+            </div>
+            
+            <div class="relative z-10 flex flex-col items-center sm:items-end w-full md:w-auto flex-shrink-0">
+                <button class="w-full sm:w-auto bg-accent-400 hover:bg-accent-500 text-gray-900 font-bold rounded-full px-8 py-4 text-lg transition-colors shadow-xl shadow-accent-500/20 flex items-center justify-center gap-2">
+                    Daftar Sekarang
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                <p class="text-primary-200 text-xs mt-3 flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i> Gratis &bull; Proses cepat &bull; Tanpa ribet
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white pt-20 pb-10 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+                
+                <!-- Brand Col -->
+                <div class="lg:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md">
+                            K
+                        </div>
+                        <span class="font-bold text-2xl tracking-tight text-gray-900">iVU</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6 max-w-sm">
+                        Lebih Banyak Peluang untuk Semua. Platform yang menghubungkan talenta muda berbakat dengan UMKM di seluruh Indonesia.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                            <i class="fa-brands fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                            <i class="fa-brands fa-linkedin-in text-lg"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                            <i class="fa-brands fa-youtube text-lg"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-colors">
+                            <i class="fa-brands fa-tiktok text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Links Col 1 -->
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-6 uppercase text-sm tracking-wider">Untuk UMKM</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Posting Tugas</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Cari Talenta</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Harga & Pembayaran</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Pusat Bantuan</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links Col 2 -->
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-6 uppercase text-sm tracking-wider">Untuk Talenta</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Cari Tugas</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Tips Sukses</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Keamanan</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links Col 3 -->
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-6 uppercase text-sm tracking-wider">Tentang</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Tentang KIVU</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Karir</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-primary-600 transition-colors">Kontak</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-gray-500">
+                    &copy; 2026 KIVU. Semua hak dilindungi.
+                </p>
+                <div class="flex gap-6">
+                    <a href="#" class="text-sm text-gray-500 hover:text-gray-900">Kebijakan Privasi</a>
+                    <a href="#" class="text-sm text-gray-500 hover:text-gray-900">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to handle navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 10) {
+                nav.classList.add('shadow-sm');
+            } else {
+                nav.classList.remove('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>

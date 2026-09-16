@@ -48,6 +48,8 @@ class ApplicationPolicy
 
     public function view(User $user, Application $application): bool
     {
-        return $user->role === 'admin' || $user->id === $application->student_id;
+        return $user->role === 'admin'
+            || $user->id === $application->student_id
+            || $application->project->owner_id === $user->id;
     }
 }

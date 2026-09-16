@@ -27,11 +27,20 @@ class TalentProfile extends Component
             ->latest()
             ->get();
 
+        $trust = StudentTrust::summary($this->student);
+
+        $description = $this->student->bio
+            ?: 'Profil mahasiswa talent KIVU — '.$trust['completed_projects'].' proyek selesai, '
+                .($trust['rating_avg'] ? $trust['rating_avg'].' rating rata-rata' : 'belum ada rating').'.';
+
         return view('livewire.public.talent-profile', [
             'student' => $this->student,
             'portfolios' => $portfolios,
             'reviews' => $reviews,
-            'trust' => StudentTrust::summary($this->student),
-        ])->layout('layouts.public');
+            'trust' => $trust,
+        ])->layout('layouts.public', [
+            'title' => $this->student->name.' — Talent KIVU',
+            'description' => $description,
+        ]);
     }
 }

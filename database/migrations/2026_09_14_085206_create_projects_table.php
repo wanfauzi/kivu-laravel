@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->unsignedBigInteger('budget');
-            $table->enum('status', ['OPEN', 'IN_PROGRESS', 'SUBMITTED', 'COMPLETED'])->default('OPEN');
+            $table->string('status', 20)->default('OPEN');
             $table->timestamps();
             $table->index(['owner_id', 'status']);
         });

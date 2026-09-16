@@ -1,11 +1,37 @@
-@props(['variant' => 'neutral'])
+@props(['variant' => 'neutral', 'dot' => false, 'size' => 'md'])
+
 @php
     $map = [
-        'success' => 'bg-[var(--kivu-success-soft)] text-[var(--kivu-success)] border-[var(--kivu-success)]/20',
-        'warning' => 'bg-[#FFFBEB] text-[#D97706] border-[#D97706]/20',
-        'danger' => 'bg-[var(--kivu-danger-soft)] text-[var(--kivu-danger)] border-[var(--kivu-danger)]/20',
-        'info' => 'bg-[var(--kivu-info-soft)] text-[var(--kivu-info)] border-[var(--kivu-info)]/20',
-        'neutral' => 'bg-[var(--kivu-surface-muted)] text-[var(--kivu-text-secondary)] border-[var(--kivu-border)]',
+        'primary' => 'bg-kivu-primary-soft text-kivu-primary',
+        'success' => 'bg-kivu-success-soft text-kivu-success',
+        'warning' => 'bg-kivu-warning-soft text-kivu-warning',
+        'danger' => 'bg-kivu-danger-soft text-kivu-danger',
+        'info' => 'bg-kivu-info-soft text-kivu-info',
+        'neutral' => 'bg-kivu-surface-muted text-kivu-text-secondary',
     ];
+
+    $dotMap = [
+        'primary' => 'bg-kivu-primary',
+        'success' => 'bg-kivu-success',
+        'warning' => 'bg-kivu-warning',
+        'danger' => 'bg-kivu-danger',
+        'info' => 'bg-kivu-info',
+        'neutral' => 'bg-kivu-text-muted',
+    ];
+
+    $sizes = [
+        'sm' => 'px-2 py-0.5 text-[11px] gap-1',
+        'md' => 'px-2.5 py-1 text-xs gap-1.5',
+    ];
+
+    $tone = $map[$variant] ?? $map['neutral'];
+    $dotTone = $dotMap[$variant] ?? $dotMap['neutral'];
+    $sizeClass = $sizes[$size] ?? $sizes['md'];
 @endphp
-<span {{ $attributes->merge(['class' => 'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ' . ($map[$variant] ?? $map['neutral'])]) }}>{{ $slot }}</span>
+
+<span {{ $attributes->merge(['class' => "inline-flex items-center rounded-full font-semibold {$sizeClass} {$tone}"]) }}>
+    @if ($dot)
+        <span class="h-1.5 w-1.5 shrink-0 rounded-full {{ $dotTone }}"></span>
+    @endif
+    {{ $slot }}
+</span>

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Models\Application;
 use App\Models\Dispute;
 use App\Models\Project;
+use App\Models\ProjectFund;
 use App\Models\Submission;
 use App\Models\Transaction;
 use App\Models\Wallet;
@@ -16,7 +17,9 @@ use Livewire\Component;
 class Disputes extends Component
 {
     public ?int $actionDisputeId = null;
+
     public string $actionType = '';
+
     public bool $confirming = false;
 
     public function confirmAction(int $id, string $type)
@@ -53,35 +56,64 @@ class Disputes extends Component
                     'resolved_by' => Auth::id(),
                     'resolved_at' => now(),
                 ]);
+
                 return null;
             }
 
-            $submission = Submission::where('project_id', $project->id)->lockForUpdate()->first();
+            $winnerApp = Application::where('project_id', $project->id)
+                ->where('status', 'ACCEPTED')
+                ->lockForUpdate()
+                ->first();
+
+            $winnerSubmission = $winnerApp
+                ? Submission::where('project_id', $project->id)
+                    ->where('student_id', $winnerApp->student_id)
+                    ->lockForUpdate()
+                    ->first()
+                : Submission::where('project_id', $project->id)->lockForUpdate()->first();
 
             if ($this->actionType === 'release') {
-                if (!$submission) {
-                    return 'Proyek belum memiliki submission untuk dibayar.';
+                if (! $winnerSubmission) {
+                    return 'Proyek belum memiliki hasil pemenang untuk dibayar.';
                 }
 
-                if ($submission->status === 'APPROVED' || $project->status === 'COMPLETED') {
+                if ($winnerSubmission->status === 'APPROVED' || $project->status === 'COMPLETED') {
                     return 'Proyek sudah dibayar. Gunakan Refund, bukan Release.';
                 }
 
-                $submission->update(['status' => 'APPROVED']);
+                $fund = ProjectFund::where('project_id', $project->id)
+                    ->where('status', 'LOCKED')
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $fund) {
+                    return 'Dana escrow belum terkunci untuk proyek ini.';
+                }
+
+                $winnerSubmission->update(['status' => 'APPROVED']);
                 $project->update(['status' => 'COMPLETED']);
+
+                $amount = min($project->agreedAmount($winnerApp), $fund->amount);
+
+                $fund->update([
+                    'status' => 'RELEASED',
+                    'released_at' => now(),
+                ]);
 
                 Transaction::create([
                     'project_id' => $project->id,
-                    'student_id' => $submission->student_id,
-                    'amount' => $project->budget,
+                    'student_id' => $winnerSubmission->student_id,
+                    'amount' => $amount,
                     'type' => 'payment',
                     'status' => 'SUCCESS',
+                    'payment_method' => 'qris',
+                    'payment_reference' => $fund->reference,
                 ]);
 
-                $wallet = Wallet::where('student_id', $submission->student_id)
+                $wallet = Wallet::where('student_id', $winnerSubmission->student_id)
                     ->lockForUpdate()
-                    ->firstOrCreate(['student_id' => $submission->student_id], ['balance' => 0]);
-                $wallet->increment('balance', $project->budget);
+                    ->firstOrCreate(['student_id' => $winnerSubmission->student_id], ['balance' => 0]);
+                $wallet->increment('balance', $amount);
 
                 $dispute->update([
                     'status' => 'RESOLVED',
@@ -89,39 +121,22 @@ class Disputes extends Component
                     'resolved_by' => Auth::id(),
                     'resolved_at' => now(),
                 ]);
+
                 return null;
             }
 
-            // refund
-            $payment = Transaction::where('project_id', $project->id)
-                ->where('type', 'payment')
-                ->where('status', 'SUCCESS')
-                ->first();
-
-            if ($payment) {
-                $wallet = Wallet::where('student_id', $payment->student_id)
-                    ->lockForUpdate()
-                    ->first();
-                if (!$wallet || $wallet->balance < $payment->amount) {
-                    return 'Saldo mahasiswa tidak mencukupi untuk refund.';
-                }
-                $wallet->decrement('balance', $payment->amount);
-                Transaction::create([
-                    'project_id' => $project->id,
-                    'student_id' => $payment->student_id,
-                    'amount' => $payment->amount,
-                    'type' => 'refund',
-                    'status' => 'SUCCESS',
+            // refund: escrow kembali ke UMKM, semua hasil dihapus, lamaran kembali menunggu
+            ProjectFund::where('project_id', $project->id)
+                ->where('status', 'LOCKED')
+                ->lockForUpdate()
+                ->update([
+                    'status' => 'REFUNDED',
+                    'refunded_at' => now(),
                 ]);
-            }
 
-            if ($submission) {
-                $submission->delete();
-            }
+            Submission::where('project_id', $project->id)->delete();
 
-            Application::where('project_id', $project->id)
-                ->where('status', 'ACCEPTED')
-                ->update(['status' => 'PENDING']);
+            $project->applications()->update(['status' => 'PENDING']);
 
             $project->update(['status' => 'OPEN']);
 
@@ -139,6 +154,7 @@ class Disputes extends Component
 
         if ($result !== null) {
             session()->flash('error', $result);
+
             return;
         }
 
@@ -148,7 +164,7 @@ class Disputes extends Component
     public function render()
     {
         $disputes = Dispute::with(['project', 'reporter', 'against', 'resolver'])
-            ->orderByRaw("FIELD(status, 'OPEN', 'RESOLVED', 'REJECTED')")
+            ->orderByRaw("CASE status WHEN 'OPEN' THEN 0 WHEN 'RESOLVED' THEN 1 ELSE 2 END")
             ->latest()
             ->get();
 

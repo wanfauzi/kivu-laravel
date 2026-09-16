@@ -1,257 +1,364 @@
-<div class="mx-auto max-w-2xl space-y-6">
-    <div>
-        <h1 class="text-2xl font-bold tracking-tight text-gray-900">Profil Saya</h1>
-        <p class="text-sm text-gray-500">Kelola identitas akun dan verifikasi mahasiswa Anda.</p>
-    </div>
+<div class="mx-auto max-w-3xl space-y-6">
+    <x-ui.page-header title="Profil Saya" subtitle="Kelola identitas akun, portofolio, dan verifikasi mahasiswa Anda." />
 
-    <div class="rounded-2xl border border-gray-200 bg-white p-6">
-        <div class="flex items-center gap-4">
-            <x-ui.avatar :name="$user->name" size="lg" />
-            <div>
-                <p class="flex items-center gap-2 text-lg font-bold text-gray-900">
+    {{-- Identity --}}
+    <div class="kivu-card p-6">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <x-ui.avatar :name="$user->name" size="xl" />
+            <div class="min-w-0">
+                <p class="flex flex-wrap items-center gap-2 text-lg font-bold text-kivu-text">
                     {{ $user->name }}
                     <x-ui.verified-badge :user="$user" />
                 </p>
-                <p class="text-sm text-gray-500">{{ $user->email }}</p>
+                <p class="text-sm text-kivu-text-muted">{{ $user->email }}</p>
             </div>
         </div>
-        <dl class="mt-5 grid grid-cols-1 gap-3 border-t border-gray-100 pt-5 sm:grid-cols-2">
+
+        <dl class="mt-5 grid grid-cols-1 gap-3 border-t border-kivu-border pt-5 sm:grid-cols-2">
             <div>
-                <dt class="text-xs text-gray-400">Role</dt>
-                <dd class="text-sm font-medium capitalize text-gray-800">Mahasiswa</dd>
+                <dt class="text-xs text-kivu-text-muted">Peran</dt>
+                <dd class="text-sm font-medium text-kivu-text">Mahasiswa</dd>
             </div>
             <div>
-                <dt class="text-xs text-gray-400">Status Akun</dt>
-                <dd class="text-sm font-medium text-gray-800">
-                    @if($user->status === 'pending_ktm')
-                        Menunggu Verifikasi
-                    @elseif($user->status === 'suspended')
-                        Ditangguhkan
+                <dt class="text-xs text-kivu-text-muted">Status Akun</dt>
+                <dd class="mt-0.5">
+                    @if ($user->status === 'pending_ktm')
+                        <x-ui.badge variant="warning">Menunggu Verifikasi</x-ui.badge>
+                    @elseif ($user->status === 'suspended')
+                        <x-ui.badge variant="danger">Ditangguhkan</x-ui.badge>
                     @else
-                        Aktif
+                        <x-ui.badge variant="success">Aktif</x-ui.badge>
                     @endif
                 </dd>
             </div>
         </dl>
-        <div class="mt-5 grid grid-cols-2 gap-3 border-t border-gray-100 pt-5 sm:grid-cols-4">
-            <div class="rounded-xl bg-gray-50 p-3 text-center">
-                <p class="text-lg font-bold text-gray-900">{{ $trust['completed_projects'] }}</p>
-                <p class="text-xs text-gray-500">Proyek Selesai</p>
-            </div>
-            <div class="rounded-xl bg-gray-50 p-3 text-center">
-                <p class="text-lg font-bold text-gray-900">{{ $trust['rating_avg'] ?? '-' }}</p>
-                <p class="text-xs text-gray-500">Rating</p>
-            </div>
-            <div class="rounded-xl bg-gray-50 p-3 text-center">
-                <p class="text-lg font-bold text-gray-900">{{ $trust['reviews_count'] }}</p>
-                <p class="text-xs text-gray-500">Ulasan</p>
-            </div>
-            <div class="rounded-xl bg-gray-50 p-3 text-center">
-                <p class="text-lg font-bold text-gray-900">{{ $trust['member_since']?->translatedFormat('M Y') }}</p>
-                <p class="text-xs text-gray-500">Bergabung</p>
-            </div>
+
+        <div class="mt-5 grid grid-cols-2 gap-3 border-t border-kivu-border pt-5 sm:grid-cols-4">
+            @foreach ([
+                ['value' => $trust['completed_projects'], 'label' => 'Proyek Selesai'],
+                ['value' => $trust['rating_avg'] ?? '-', 'label' => 'Rating'],
+                ['value' => $trust['reviews_count'], 'label' => 'Ulasan'],
+                ['value' => $trust['member_since']?->translatedFormat('M Y') ?? '-', 'label' => 'Bergabung'],
+            ] as $stat)
+                <div class="rounded-kivu-sm bg-kivu-surface-muted p-3 text-center">
+                    <p class="text-lg font-bold text-kivu-text">{{ $stat['value'] }}</p>
+                    <p class="text-xs text-kivu-text-muted">{{ $stat['label'] }}</p>
+                </div>
+            @endforeach
         </div>
     </div>
 
-    <div class="rounded-2xl border border-gray-200 bg-white p-6">
-        <h3 class="text-lg font-bold text-gray-900">Ubah Profil</h3>
-        <form wire:submit.prevent="updateProfile" class="mt-4 space-y-4">
+    {{-- Edit profile --}}
+    <div class="kivu-card p-6">
+        <h3 class="text-lg font-bold text-kivu-text">Ubah Profil</h3>
+
+        <form wire:submit="updateProfile" class="mt-5 space-y-4">
             <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Nama</label>
-                <input type="text" wire:model="name" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                @error('name') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
+                <label for="profile-name" class="mb-1.5 block text-sm font-medium text-kivu-text">Nama</label>
+                <input id="profile-name" type="text" wire:model="name" class="kivu-input px-3.5 py-2.5 text-sm" />
+                @error('name')
+                    <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                @enderror
             </div>
+
             <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Bio Singkat</label>
-                <textarea wire:model="bio" rows="3" placeholder="Ceritakan keahlian dan minat Anda..." class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"></textarea>
-                @error('bio') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
+                <label for="profile-bio" class="mb-1.5 block text-sm font-medium text-kivu-text">Bio Singkat</label>
+                <textarea id="profile-bio" wire:model="bio" rows="3" placeholder="Ceritakan keahlian dan minat Anda..."
+                    class="kivu-input px-3.5 py-2.5 text-sm"></textarea>
+                @error('bio')
+                    <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                @enderror
             </div>
+
             <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Keahlian (pisahkan dengan koma)</label>
-                <input type="text" wire:model="skillsInput" placeholder="Desain Grafis, Copywriting, Web Development" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                @error('skillsInput') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
-                <p class="mt-1 text-xs text-gray-400">Maks 10 keahlian.</p>
+                <label for="profile-skills" class="mb-1.5 block text-sm font-medium text-kivu-text">Keahlian</label>
+                <input id="profile-skills" type="text" wire:model="skillsInput" placeholder="Desain Grafis, Copywriting, Web Development"
+                    class="kivu-input px-3.5 py-2.5 text-sm" />
+                @error('skillsInput')
+                    <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                @enderror
+                <p class="mt-1 text-xs text-kivu-text-muted">Pisahkan dengan koma. Maksimal 10 keahlian.</p>
             </div>
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Password Saat Ini</label>
-                <input type="password" wire:model="current_password" placeholder="Kosongkan bila tidak ganti password" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                @error('current_password') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
+
+            <div class="grid grid-cols-1 gap-4 border-t border-kivu-border pt-4 sm:grid-cols-3">
+                <div>
+                    <label for="profile-current-password" class="mb-1.5 block text-sm font-medium text-kivu-text">Password Saat Ini</label>
+                    <input id="profile-current-password" type="password" wire:model="current_password" placeholder="Kosongkan bila tidak ganti"
+                        class="kivu-input px-3.5 py-2.5 text-sm" />
+                    @error('current_password')
+                        <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="profile-password" class="mb-1.5 block text-sm font-medium text-kivu-text">Password Baru</label>
+                    <input id="profile-password" type="password" wire:model="password" placeholder="Minimal 8 karakter"
+                        class="kivu-input px-3.5 py-2.5 text-sm" />
+                    @error('password')
+                        <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="profile-password-confirm" class="mb-1.5 block text-sm font-medium text-kivu-text">Konfirmasi Password</label>
+                    <input id="profile-password-confirm" type="password" wire:model="password_confirmation" class="kivu-input px-3.5 py-2.5 text-sm" />
+                </div>
             </div>
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Password Baru</label>
-                <input type="password" wire:model="password" placeholder="Minimal 8 karakter" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                @error('password') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">Konfirmasi Password Baru</label>
-                <input type="password" wire:model="password_confirmation" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-            </div>
-            <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700" wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="updateProfile">Simpan Perubahan</span>
-                <span wire:loading wire:target="updateProfile">Menyimpan...</span>
-            </button>
+
+            <x-ui.button type="submit" loading-target="updateProfile" loading-label="Menyimpan...">
+                Simpan Perubahan
+            </x-ui.button>
         </form>
     </div>
 
-    <div class="rounded-2xl border border-gray-200 bg-white p-6">
-        <h3 class="flex items-center gap-2 text-lg font-bold text-gray-900">
-            <x-icon name="id-card" :size="20" /> Verifikasi KTM
+    {{-- KTM --}}
+    <div class="kivu-card p-6">
+        <h3 class="flex items-center gap-2 text-lg font-bold text-kivu-text">
+            <x-icon name="id-card" :size="20" class="text-kivu-primary" /> Verifikasi KTM
         </h3>
 
-        @if($user->isVerifiedStudent())
-            <div class="mt-4 flex items-center gap-2 rounded-xl border border-success-200 bg-success-50 px-4 py-3 text-sm text-success-700">
-                <x-icon name="circle-check" :size="18" /> Akun Anda telah terverifikasi sebagai mahasiswa.
+        @if ($user->isVerifiedStudent())
+            <div class="mt-4 flex items-center gap-2 rounded-kivu-sm border border-kivu-success/25 bg-kivu-success-soft px-4 py-3 text-sm text-kivu-success">
+                <x-icon name="circle-check" :size="18" class="shrink-0" /> Akun Anda telah terverifikasi sebagai mahasiswa.
             </div>
         @else
-            <p class="mt-2 text-sm text-gray-500">
-                Unggah foto/scan Kartu Tanda Mahasiswa untuk diverifikasi admin. Format: <strong>JPG, PNG, atau PDF</strong> (maks. 2 MB).
+            <p class="mt-2 text-sm text-kivu-text-secondary">
+                Unggah foto/scan Kartu Tanda Mahasiswa untuk diverifikasi admin. Format JPG, PNG, atau PDF (maks. 2 MB).
             </p>
 
-            @if($user->ktm_path)
-                <div class="mt-4 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
-                    <x-icon name="upload" :size="18" />
-                    <span>KTM telah diunggah dan menunggu verifikasi admin.</span>
-                    <a href="{{ route('ktm.show', $user->id) }}" target="_blank" class="ms-auto shrink-0 font-semibold text-blue-700 underline">Lihat</a>
+            @if ($user->ktm_path)
+                <div class="mt-4 flex items-center gap-3 rounded-kivu-sm border border-kivu-info/25 bg-kivu-info-soft px-4 py-3 text-sm text-kivu-info">
+                    <x-icon name="upload" :size="18" class="shrink-0" />
+                    <span>KTM sudah diunggah dan menunggu verifikasi admin.</span>
+                    <a href="{{ route('ktm.show', $user->id) }}" target="_blank" class="kivu-focus ms-auto shrink-0 rounded font-semibold underline">Lihat</a>
                 </div>
             @endif
 
-            <form wire:submit.prevent="saveKtm" class="mt-4 space-y-4">
+            <form wire:submit="saveKtm" class="mt-4 space-y-4">
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700">File KTM</label>
-                    <input type="file" wire:model="ktm" accept=".jpg,.jpeg,.png,.pdf"
-                        class="block w-full cursor-pointer rounded-lg border border-gray-300 bg-white text-sm text-gray-600 file:mr-3 file:border-0 file:bg-blue-50 file:px-4 file:py-2.5 file:text-sm file:font-medium file:text-blue-700">
-                    @error('ktm') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
-                    <div wire:loading wire:target="ktm" class="mt-2 text-xs text-gray-400">Mengunggah...</div>
+                    <label for="ktm-file" class="mb-1.5 block text-sm font-medium text-kivu-text">File KTM</label>
+                    <input id="ktm-file" type="file" wire:model="ktm" accept=".jpg,.jpeg,.png,.pdf"
+                        class="kivu-input file:mr-3 file:rounded-kivu-sm file:border-0 file:bg-kivu-primary-soft file:px-3 file:py-2 file:text-sm file:font-semibold file:text-kivu-primary px-3 py-2 text-sm" />
+                    @error('ktm')
+                        <p class="mt-1.5 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                    <div wire:loading wire:target="ktm" class="mt-2 flex items-center gap-2 text-xs text-kivu-text-muted">
+                        <x-icon name="rotate-ccw" :size="14" class="animate-spin" /> Mengunggah...
+                    </div>
                 </div>
-                <button type="submit" wire:loading.attr="disabled" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700">
+
+                <x-ui.button type="submit" loading-target="saveKtm" loading-label="Mengunggah...">
                     <x-icon name="upload" :size="18" /> Unggah KTM
-                </button>
+                </x-ui.button>
             </form>
         @endif
     </div>
 
-    <div class="rounded-2xl border border-gray-200 bg-white p-6">
-        <div class="flex items-center justify-between">
-            <h3 class="flex items-center gap-2 text-lg font-bold text-gray-900">
-                <x-icon name="briefcase" :size="20" /> Portofolio
+    {{-- Portfolio --}}
+    <div class="kivu-card p-6">
+        <div class="flex items-center justify-between gap-3">
+            <h3 class="flex items-center gap-2 text-lg font-bold text-kivu-text">
+                <x-icon name="briefcase" :size="20" class="text-kivu-primary" /> Portofolio
+                <span class="text-xs font-medium text-kivu-text-muted">({{ $portfolios->count() }}/12)</span>
             </h3>
-            <button wire:click="openPortfolioModal" class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-blue-700">
+            <x-ui.button wire:click="openPortfolioModal" size="sm">
                 <x-icon name="plus-circle" :size="14" /> Tambah
-            </button>
+            </x-ui.button>
         </div>
-        <p class="mt-1 text-xs text-gray-500">Tampilkan karya terbaik Anda agar UMKM lebih percaya. Maksimal 12 item.</p>
+
+        <p class="mt-1 text-xs text-kivu-text-muted">Tampilkan karya terbaik Anda agar UMKM lebih percaya.</p>
 
         <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            @forelse($portfolios as $item)
-                <div class="rounded-xl border border-gray-200 p-4">
-                    @if($item->file_path && $item->isImage())
-                        <img src="{{ Storage::disk('public')->url($item->file_path) }}" alt="{{ $item->title }}" class="mb-3 h-32 w-full rounded-lg object-cover">
+            @forelse ($portfolios as $item)
+                <div class="rounded-kivu border border-kivu-border p-4 {{ $item->is_service ? 'bg-kivu-yellow-soft/40 border-kivu-yellow' : '' }}">
+                    @if ($item->file_path && $item->isImage())
+                        <img src="{{ Storage::disk('public')->url($item->file_path) }}" alt="{{ $item->title }}"
+                            class="mb-3 h-32 w-full rounded-kivu-sm object-cover" loading="lazy">
                     @endif
+
                     <div class="flex items-start justify-between gap-2">
-                        <p class="text-sm font-semibold text-gray-800">{{ $item->title }}</p>
+                        <p class="text-sm font-semibold text-kivu-text">{{ $item->title }}</p>
                         <div class="flex shrink-0 gap-1">
-                            <button wire:click="editPortfolio({{ $item->id }})" class="rounded p-1 text-gray-400 hover:text-blue-600" aria-label="Edit"><x-icon name="file-text" :size="14" /></button>
-                            <button wire:click="deletePortfolio({{ $item->id }})" wire:confirm="Hapus item portofolio ini?" class="rounded p-1 text-gray-400 hover:text-error-600" aria-label="Hapus"><x-icon name="x" :size="14" /></button>
+                            <button wire:click="editPortfolio({{ $item->id }})"
+                                class="kivu-focus rounded p-1 text-kivu-text-muted transition hover:text-kivu-primary" aria-label="Edit portofolio">
+                                <x-icon name="pencil" :size="14" />
+                            </button>
+                            <button wire:click="confirmDeletePortfolio({{ $item->id }})"
+                                class="kivu-focus rounded p-1 text-kivu-text-muted transition hover:text-kivu-danger" aria-label="Hapus portofolio">
+                                <x-icon name="trash" :size="14" />
+                            </button>
                         </div>
                     </div>
-                    @if($item->description)<p class="mt-1 text-xs text-gray-500">{{ $item->description }}</p>@endif
-                    @if($item->url)
-                        <a href="{{ $item->url }}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:underline"><x-icon name="arrow-right" :size="12" /> Tautan</a>
+
+                    @if ($item->is_service)
+                        <div class="mt-1.5 flex flex-wrap gap-1.5">
+                            <span class="kivu-focus inline-flex items-center gap-1 rounded-full bg-kivu-yellow px-2 py-0.5 text-xs font-semibold text-kivu-yellow-text">Jasa</span>
+                            <span class="text-xs font-bold text-kivu-text">Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                            @if ($item->delivery_days)
+                                <span class="text-xs text-kivu-text-muted">{{ $item->delivery_days }} hari</span>
+                            @endif
+                            @if ($item->category)
+                                <span class="text-xs text-kivu-text-muted">• {{ $item->category->name }}</span>
+                            @endif
+                        </div>
                     @endif
-                    @if($item->file_path && !$item->isImage())
-                        <a href="{{ Storage::disk('public')->url($item->file_path) }}" target="_blank" class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:underline"><x-icon name="file-text" :size="12" /> Lihat File</a>
+
+                    @if ($item->description)
+                        <p class="mt-1 text-xs text-kivu-text-muted">{{ $item->description }}</p>
                     @endif
+
+                    <div class="mt-2 flex flex-wrap gap-3">
+                        @if ($item->url)
+                            <a href="{{ $item->url }}" target="_blank" rel="noopener"
+                                class="kivu-focus inline-flex items-center gap-1 rounded text-xs font-medium text-kivu-primary hover:underline">
+                                <x-icon name="external-link" :size="12" /> Tautan
+                            </a>
+                        @endif
+                        @if ($item->file_path && ! $item->isImage())
+                            <a href="{{ Storage::disk('public')->url($item->file_path) }}" target="_blank"
+                                class="kivu-focus inline-flex items-center gap-1 rounded text-xs font-medium text-kivu-primary hover:underline">
+                                <x-icon name="file-text" :size="12" /> Lihat File
+                            </a>
+                        @endif
+                    </div>
                 </div>
             @empty
-                <p class="text-sm text-gray-500">Belum ada portofolio.</p>
+                <div class="col-span-full">
+                    <x-ui.empty-state icon="briefcase" title="Belum ada portofolio"
+                        description="Tambahkan karya terbaik Anda untuk menarik perhatian UMKM." />
+                </div>
             @endforelse
         </div>
-
-        @if($showPortfolioModal)
-            <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" wire:click.self="closePortfolioModal">
-                <div class="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-xl">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-bold text-gray-900">{{ $editingPortfolioId ? 'Edit' : 'Tambah' }} Portofolio</h3>
-                        <button wire:click="closePortfolioModal" type="button" class="rounded-lg p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600" aria-label="Tutup">
-                            <x-icon name="x" :size="20" />
-                        </button>
-                    </div>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700">Judul</label>
-                            <input type="text" wire:model="p_title" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                            @error('p_title') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
-                        </div>
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700">Deskripsi</label>
-                            <textarea wire:model="p_description" rows="2" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"></textarea>
-                            @error('p_description') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
-                        </div>
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700">Tautan URL (opsional)</label>
-                            <input type="url" wire:model="p_url" placeholder="https://..." class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
-                            @error('p_url') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
-                        </div>
-                        <div>
-                            <label class="mb-1.5 block text-sm font-medium text-gray-700">File (JPG/PNG/PDF, maks 4MB)</label>
-                            <input type="file" wire:model="p_file" accept=".jpg,.jpeg,.png,.pdf" class="block w-full cursor-pointer rounded-lg border border-gray-300 bg-white text-sm text-gray-600 file:mr-3 file:border-0 file:bg-blue-50 file:px-4 file:py-2.5 file:text-sm file:font-medium file:text-blue-700">
-                            @error('p_file') <p class="mt-1 text-xs text-error-600">{{ $message }}</p> @enderror
-                            <div wire:loading wire:target="p_file" class="mt-1 text-xs text-gray-400">Mengunggah...</div>
-                        </div>
-                    </div>
-                    <div class="mt-5 flex justify-end gap-3">
-                        <button wire:click="closePortfolioModal" type="button" class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">Batal</button>
-                        <button wire:click="savePortfolio" class="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700" wire:loading.attr="disabled">Simpan</button>
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
 
-    <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5">
-        <h4 class="flex items-center gap-2 text-sm font-bold text-blue-900"><x-icon name="info" :size="16" /> Informasi</h4>
-        <p class="mt-1 text-xs leading-relaxed text-blue-700">
-            Mahasiswa dengan email <strong>.ac.id</strong> terverifikasi otomatis. Pengguna email lain harus mengunggah KTM sebelum dapat menampilkan status &quot;Mahasiswa Terverifikasi&quot;.
-        </p>
-    </div>
-
-    <div class="rounded-2xl border border-gray-200 bg-white p-6">
-        <div class="flex items-center justify-between">
-            <h3 class="flex items-center gap-2 text-lg font-bold text-gray-900">
-                <x-icon name="star" :size="20" :filled="true" /> Ulasan dari UMKM
+    {{-- Reviews --}}
+    <div class="kivu-card p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <h3 class="flex items-center gap-2 text-lg font-bold text-kivu-text">
+                <x-icon name="star" :size="20" :filled="true" class="text-kivu-warning" /> Ulasan dari UMKM
             </h3>
-            @if($avgRating)
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold text-gray-900">{{ $avgRating }}</span>
-                    <div class="flex text-amber-400">
-                        @for($i = 1; $i <= 5; $i++)
-                            <x-icon name="star" :size="16" :filled="$i <= round($avgRating)" class="{{ $i <= round($avgRating) ? '' : 'text-gray-300' }}" />
-                        @endfor
-                    </div>
-                    <span class="text-xs text-gray-400">({{ $reviews->count() }} ulasan)</span>
-                </div>
+            @if ($avgRating)
+                <x-ui.rating-stars :value="$avgRating" :count="$reviews->count()" :size="16" show-value />
             @endif
         </div>
 
         <div class="mt-4 space-y-3">
-            @forelse($reviews as $review)
-                <div class="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-semibold text-gray-800">{{ $review->reviewer->name ?? 'UMKM' }}</p>
-                        <div class="flex text-amber-400">
-                            @for($i = 1; $i <= 5; $i++)
-                                <x-icon name="star" :size="14" :filled="$i <= $review->rating" class="{{ $i <= $review->rating ? '' : 'text-gray-300' }}" />
-                            @endfor
-                        </div>
+            @forelse ($reviews as $review)
+                <div class="rounded-kivu border border-kivu-border bg-kivu-surface-muted/60 p-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <p class="text-sm font-semibold text-kivu-text">{{ $review->reviewer->name ?? 'UMKM' }}</p>
+                        <x-ui.rating-stars :value="$review->rating" :size="14" />
                     </div>
-                    @if($review->comment)
-                        <p class="mt-1 text-sm text-gray-600">{{ $review->comment }}</p>
+                    @if ($review->comment)
+                        <p class="mt-1.5 text-sm leading-relaxed text-kivu-text-secondary">{{ $review->comment }}</p>
                     @endif
-                    <p class="mt-1 text-xs text-gray-400">{{ $review->created_at->translatedFormat('d F Y') }}</p>
+                    <p class="mt-1.5 text-xs text-kivu-text-muted">{{ $review->created_at->translatedFormat('d F Y') }}</p>
                 </div>
             @empty
-                <p class="text-sm text-gray-500">Belum ada ulasan. Selesaikan proyek untuk menerima ulasan dari UMKM.</p>
+                <p class="text-sm text-kivu-text-muted">Belum ada ulasan. Selesaikan proyek untuk menerima ulasan dari UMKM.</p>
             @endforelse
         </div>
     </div>
+
+    {{-- Info --}}
+    <div class="flex gap-2.5 rounded-kivu border border-kivu-info/25 bg-kivu-info-soft p-4">
+        <x-icon name="info" :size="16" class="mt-0.5 shrink-0 text-kivu-info" />
+        <p class="text-xs leading-relaxed text-kivu-info">
+            Mahasiswa dengan email <strong>.ac.id</strong> terverifikasi otomatis. Email lain harus mengunggah KTM agar lencana &quot;Mahasiswa Terverifikasi&quot; muncul.
+        </p>
+    </div>
+
+    {{-- Portfolio modal --}}
+    @if ($showPortfolioModal)
+        <x-ui.confirm-modal
+            :title="($editingPortfolioId ? 'Edit' : 'Tambah').' Portofolio'"
+            confirm-label="Simpan"
+            confirm-method="savePortfolio"
+            cancel-method="closePortfolioModal"
+            tone="primary"
+            loading-target="savePortfolio">
+            <div class="space-y-4">
+                <div>
+                    <label for="p-title" class="mb-1.5 block text-sm font-medium text-kivu-text">Judul</label>
+                    <input id="p-title" type="text" wire:model="p_title" class="kivu-input px-3 py-2.5 text-sm" />
+                    @error('p_title')
+                        <p class="mt-1 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="p-description" class="mb-1.5 block text-sm font-medium text-kivu-text">Deskripsi</label>
+                    <textarea id="p-description" wire:model="p_description" rows="2" class="kivu-input px-3 py-2.5 text-sm"></textarea>
+                    @error('p_description')
+                        <p class="mt-1 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="p-url" class="mb-1.5 block text-sm font-medium text-kivu-text">Tautan URL (opsional)</label>
+                    <input id="p-url" type="url" wire:model="p_url" placeholder="https://..." class="kivu-input px-3 py-2.5 text-sm" />
+                    @error('p_url')
+                        <p class="mt-1 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="p-file" class="mb-1.5 block text-sm font-medium text-kivu-text">File (JPG/PNG/PDF, maks 4 MB)</label>
+                    <input id="p-file" type="file" wire:model="p_file" accept=".jpg,.jpeg,.png,.pdf"
+                        class="kivu-input file:mr-3 file:rounded-kivu-sm file:border-0 file:bg-kivu-primary-soft file:px-3 file:py-2 file:text-sm file:font-semibold file:text-kivu-primary px-3 py-2 text-sm" />
+                    @error('p_file')
+                        <p class="mt-1 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                    @enderror
+                    <div wire:loading wire:target="p_file" class="mt-1 flex items-center gap-2 text-xs text-kivu-text-muted">
+                        <x-icon name="rotate-ccw" :size="14" class="animate-spin" /> Mengunggah...
+                    </div>
+                </div>
+
+                <label class="flex cursor-pointer items-center gap-2 rounded-kivu-sm border border-kivu-border bg-kivu-surface-muted p-3">
+                    <input type="checkbox" wire:model.live="p_is_service" class="h-4 w-4 text-kivu-primary" />
+                    <span class="text-sm font-medium text-kivu-text">Tawarkan sebagai Jasa (UMKM bisa memesan)</span>
+                </label>
+
+                @if ($p_is_service)
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-kivu-text">Harga (Rp)</label>
+                            <input type="number" wire:model="p_price" class="kivu-input px-3 py-2 text-sm" placeholder="50000" />
+                            @error('p_price')
+                                <p class="mt-1 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-sm font-medium text-kivu-text">Estimasi (hari)</label>
+                            <input type="number" wire:model="p_delivery_days" class="kivu-input px-3 py-2 text-sm" />
+                            @error('p_delivery_days')
+                                <p class="mt-1 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-kivu-text">Kategori Jasa</label>
+                        <select wire:model="p_category_id" class="kivu-input px-3 py-2 text-sm">
+                            <option value="">Pilih kategori</option>
+                            @foreach ($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('p_category_id')
+                            <p class="mt-1 text-xs font-medium text-kivu-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endif
+            </div>
+        </x-ui.confirm-modal>
+    @endif
+
+    @if ($confirmingDeletePortfolio)
+        <x-ui.confirm-modal
+            title="Hapus Portofolio"
+            message="Item portofolio ini akan dihapus permanen."
+            confirm-label="Ya, Hapus"
+            confirm-method="deletePortfolioItem"
+            cancel-method="cancelDeletePortfolio"
+            tone="danger"
+            loading-target="deletePortfolioItem" />
+    @endif
 </div>

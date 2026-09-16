@@ -52,10 +52,16 @@ class DisputePolicy
         }
 
         if ($auth->role === 'student') {
-            return $project->applications()
+            $accepted = $project->applications()
                 ->where('student_id', $auth->id)
                 ->where('status', 'ACCEPTED')
                 ->exists();
+
+            $submitted = \App\Models\Submission::where('project_id', $project->id)
+                ->where('student_id', $auth->id)
+                ->exists();
+
+            return $accepted || $submitted;
         }
 
         return false;

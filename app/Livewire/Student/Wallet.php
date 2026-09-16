@@ -2,22 +2,31 @@
 
 namespace App\Livewire\Student;
 
-use App\Models\Wallet as WalletModel;
 use App\Models\Transaction;
+use App\Models\Wallet as WalletModel;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Wallet extends Component
 {
+    use WithPagination;
+
     public $amount;
+
     public $bank_name;
+
     public $bank_account;
+
     public $note;
+
     public bool $confirming = false;
+
     public ?int $pendingCancelId = null;
+
     public bool $confirmingCancel = false;
 
     protected $rules = [
@@ -29,7 +38,27 @@ class Wallet extends Component
 
     public function confirmWithdraw()
     {
-        $this->validate();
+        $wallet = WalletModel::firstOrCreate(['student_id' => Auth::id()], ['balance' => 0]);
+
+        if ($wallet->balance < 10000) {
+            $this->addError('amount', 'Saldo tidak mencukupi. Saldo Anda Rp '.number_format($wallet->balance, 0, ',', '.').' minimal penarikan Rp 10.000.');
+
+            return;
+        }
+
+        if ((int) $this->amount > $wallet->balance) {
+            $this->addError('amount', 'Saldo tidak mencukupi. Saldo tersedia Rp '.number_format($wallet->balance, 0, ',', '.').'.');
+
+            return;
+        }
+
+        $this->validate([
+            'amount' => 'required|numeric|min:10000|max:'.$wallet->balance,
+            'bank_name' => 'required|string|max:100',
+            'bank_account' => 'required|string|max:50',
+            'note' => 'nullable|string|max:255',
+        ]);
+
         $this->confirming = true;
     }
 
@@ -83,6 +112,7 @@ class Wallet extends Component
 
         if ($ok !== true) {
             session()->flash('error', 'Penarikan tidak dapat dibatalkan.');
+
             return;
         }
 
@@ -91,7 +121,16 @@ class Wallet extends Component
 
     public function withdraw()
     {
-        $this->validate();
+        $walletCheck = WalletModel::firstOrCreate(['student_id' => Auth::id()], ['balance' => 0]);
+
+        $this->validate([
+            'amount' => 'required|numeric|min:10000|max:'.$walletCheck->balance,
+            'bank_name' => 'required|string|max:100',
+            'bank_account' => 'required|string|max:50',
+            'note' => 'nullable|string|max:255',
+        ], [
+            'amount.max' => 'Saldo tidak mencukupi. Saldo tersedia Rp '.number_format($walletCheck->balance, 0, ',', '.').'.',
+        ]);
 
         $ok = DB::transaction(function () {
             $wallet = WalletModel::where('student_id', Auth::id())->lockForUpdate()->firstOrCreate(['student_id' => Auth::id()], ['balance' => 0]);
@@ -110,12 +149,14 @@ class Wallet extends Component
             ]);
 
             $wallet->decrement('balance', $this->amount);
+
             return true;
         });
 
         if ($ok !== true) {
             session()->flash('error', 'Saldo tidak mencukupi.');
             $this->cancelWithdraw();
+
             return;
         }
 
@@ -130,7 +171,7 @@ class Wallet extends Component
         $transactions = Transaction::with('project')
             ->where('student_id', Auth::id())
             ->latest()
-            ->get();
+            ->paginate(10);
         $withdrawals = Withdrawal::where('student_id', Auth::id())
             ->latest()
             ->get();

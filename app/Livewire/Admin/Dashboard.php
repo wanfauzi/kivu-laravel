@@ -16,6 +16,21 @@ class Dashboard extends Component
         $paymentSum = Transaction::where('type', 'payment')->where('status', 'SUCCESS')->sum('amount');
         $refundSum = Transaction::where('type', 'refund')->where('status', 'SUCCESS')->sum('amount');
 
+        $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i));
+        $since = now()->subMonths(5)->startOfMonth();
+
+        $groupByMonth = function (string $type) use ($since) {
+            return Transaction::where('type', $type)
+                ->where('status', 'SUCCESS')
+                ->where('created_at', '>=', $since)
+                ->get(['amount', 'created_at'])
+                ->groupBy(fn ($t) => $t->created_at->format('Y-m'))
+                ->map(fn ($rows) => (int) $rows->sum('amount'));
+        };
+
+        $paymentByMonth = $groupByMonth('payment');
+        $withdrawalByMonth = $groupByMonth('withdrawal');
+
         return view('livewire.admin.dashboard', [
             'totalUsers' => User::count(),
             'totalProjects' => Project::count(),
@@ -29,6 +44,9 @@ class Dashboard extends Component
             'pendingKtm' => User::where('status', 'pending_ktm')->count(),
             'openDisputes' => Dispute::where('status', 'OPEN')->count(),
             'recentUsers' => User::latest()->limit(5)->get(),
+            'chartLabels' => $months->map(fn ($m) => $m->translatedFormat('M'))->all(),
+            'paymentSeries' => $months->map(fn ($m) => $paymentByMonth[$m->format('Y-m')] ?? 0)->all(),
+            'withdrawalSeries' => $months->map(fn ($m) => $withdrawalByMonth[$m->format('Y-m')] ?? 0)->all(),
         ])->layout('components.layouts.dashboard');
     }
 }
